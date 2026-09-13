@@ -167,7 +167,6 @@ const getEmbedUrl = (url) => {
         <div v-if="lesson.practiceUrl" class="w-full min-h-[650px] mb-8 rounded-2xl overflow-hidden shadow-sm border border-slate-200">
           <iframe class="w-full h-full min-h-[650px]" :src="lesson.practiceUrl" frameborder="0" allowfullscreen></iframe>
         </div>
-        
         <div v-if="lesson.component">
           <component :is="lesson.component" />
         </div>
