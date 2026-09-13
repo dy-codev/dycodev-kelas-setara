@@ -1,0 +1,9 @@
+name = "dycodev-kelas-setara"
+compatibility_date = "2026-09-13"
+
+[assets]
+directory = "./dist"
+not_found_handling = "single-page-app"
+
+[build]
+command = "npm run build"
