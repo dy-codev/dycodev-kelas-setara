@@ -161,7 +161,13 @@ const getEmbedUrl = (url) => {
         <div v-if="lesson.slideUrl" class="aspect-video w-full mb-8 rounded-2xl overflow-hidden shadow-sm bg-slate-100 border border-slate-200">
           <iframe class="w-full h-full" :src="lesson.slideUrl" frameborder="0" allowfullscreen="true" webkitallowfullscreen="true"></iframe>
         </div>
-        <!-- ... (biarkan sisa logika pdfUrl, practiceUrl, komponen fallback lama di sini) ... -->
+        <div v-if="lesson.pdfUrl" class="w-full min-h-[600px] mb-8 rounded-2xl overflow-hidden shadow-sm bg-slate-100 border border-slate-200">
+          <iframe class="w-full h-full min-h-[600px]" :src="lesson.pdfUrl" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <div v-if="lesson.practiceUrl" class="w-full min-h-[650px] mb-8 rounded-2xl overflow-hidden shadow-sm border border-slate-200">
+          <iframe class="w-full h-full min-h-[650px]" :src="lesson.practiceUrl" frameborder="0" allowfullscreen></iframe>
+        </div>
+        
         <div v-if="lesson.component">
           <component :is="lesson.component" />
         </div>
