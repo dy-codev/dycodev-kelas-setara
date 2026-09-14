@@ -1,17 +1,36 @@
 <template>
-  <!-- Wrapper Utama Dashboard: Full screen, Flexbox -->
-  <div class="flex h-screen bg-[#F4F7F9] font-sans overflow-hidden">
+  <div class="bg-slate-900 sm:pl-10 sm:pr-2 sm:pb-2 h-screen w-full flex flex-col box-border">
+    <div class=" flex justify-between sm:my-2.5">
+      <div class="flex gap-2">
+        <svg class="w-[34px] h-[34px] shrink-0" viewBox="0 0 40 40" fill="none">
+          <rect x="16" y="2" width="10" height="10" rx="2" fill="#fff"></rect>
+          <rect x="2" y="16" width="10" height="10" rx="2" fill="#fff" opacity=".85"></rect>
+          <rect x="16" y="16" width="10" height="10" rx="2" fill="#fff" opacity=".7"></rect>
+          <rect x="30" y="16" width="10" height="10" rx="2" fill="#fff" opacity=".85"></rect>
+          <rect x="16" y="30" width="10" height="10" rx="2" fill="#fff" opacity=".7"></rect>
+        </svg>
+      <span class="text-2xl font-bold text-white tracking-wide">Kelas Setara</span>
+      </div>
+      
+      <button class="text-gray-400 hover:text-gray-600 ">
+        <!-- Icon Bell Placeholder -->
+        🔔
+      </button>
+    </div>
+      
+    <!-- Wrapper Utama Dashboard: Full screen, Flexbox -->
+  <div class="flex h-full bg-[#F4F7F9] font-sans rounded-2xl shadow-2xl overflow-hidden border border-slate-900">
     
     <!-- SIDEBAR (KIRI) -->
-    <aside class="w-64 bg-white border-r border-gray-200 flex flex-col justify-between shrink-0">
-      <div>
+    <aside class="w-[clamp(10rem,25vw,24rem)] shrink-0 bg-[#F4F7F9] flex flex-col justify-between">
+      <div class="h-full border border-gray-200 rounded-2xl sm:mt-4 sm:mr-4 sm:ml-4">
         <!-- Logo Area -->
-        <div class="h-20 flex items-center px-6">
+        <!-- <div class="h-20 flex items-center px-6">
           <div class="flex items-center gap-2">
             <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">S</div>
             <span class="text-2xl font-black text-indigo-900 tracking-tight">Kelas Setara</span>
           </div>
-        </div>
+        </div> -->
         
         <!-- Navigation Menu -->
         <nav class="px-4 py-2 space-y-1">
@@ -35,10 +54,27 @@
       </div>
 
       <!-- Logout Button -->
-      <div class="p-4">
-        <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-xl text-sm font-medium transition-colors">
+      <div class="p-0">
+        <div class="w-10 h-4 bg-slate-900">
+          <div class="w-10 h-4 bg-[#F4F7F9] rounded-bl-2xl"></div>
+        </div>
+        <div class="flex">
+          <div class="w-2/3 flex bg-slate-900 items-center gap-3 cursor-pointer px-3 py-1.5 pt-3 rounded-tr-2xl">
+            <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-sm">
+              A
+            </div>
+            <span class="text-sm font-medium text-white mr-2">Profile ⌄</span>
+          </div>
+          <div class="w-1/4">
+            <div class="w-10 h-full bg-slate-900">
+              <div class="w-10 h-full bg-[#F4F7F9] rounded-bl-2xl"></div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-xl text-sm font-medium transition-colors">
           Log Keluar
-        </a>
+        </a> -->
       </div>
     </aside>
 
@@ -46,22 +82,39 @@
     <div class="flex-1 flex flex-col overflow-hidden">
       
       <!-- Top Header -->
-      <header class="h-20 bg-[#F4F7F9] flex items-center justify-between px-8 shrink-0">
-        <h2 class="text-xl font-medium text-gray-900">Selamat Datang, <span class="font-bold">Administrator</span></h2>
-        <div class="flex items-center gap-4">
-          <button class="text-gray-400 hover:text-gray-600">
-            <!-- Icon Bell Placeholder -->
-            🔔
+      <header class="bg-[#F4F7F9] flex justify-between pl-8 shrink-0">
+        <div class="flex-9 flex justify-end">
+          <div class="flex-1 mt-4 flex justify-center">
+            <button @click="showModal = true" class=" bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg text-sm font-bold shadow-sm transition-colors">
+            + Tambah Pegawai
           </button>
-          <div class="flex items-center gap-3 cursor-pointer bg-white px-3 py-1.5 rounded-full border border-gray-200 shadow-sm">
+            <!-- <h2 class="text-md font-medium text-gray-900 ">Selamat Datang, <span class="font-bold">Administrator</span></h2> -->
+          </div>
+          
+          <div class="w-10 h-10 bg-slate-900">
+            <div class="w-10 h-10 bg-[#F4F7F9] rounded-tr-2xl"></div>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-4 bg-slate-900 flex-1 rounded-bl-2xl">
+          <!-- <button class="text-gray-400 hover:text-gray-600"> -->
+            <!-- Icon Bell Placeholder -->
+            <!-- 🔔
+          </button> -->
+          <div class="flex items-center gap-3 cursor-pointer bg-trasnparent px-3 py-1.5 rounded-2xl shadow-sm">
             <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-sm">
-              A
+              G
             </div>
-            <span class="text-sm font-medium text-gray-700 mr-2">Profile ⌄</span>
+            <span class="text-sm font-medium text-white mr-2">Guru</span>
           </div>
         </div>
       </header>
-
+      <div class="w-full flex justify-end">
+        <div class="w-10 h-10 bg-slate-900">
+            <div class="w-10 h-10 bg-[#F4F7F9] rounded-tr-2xl"></div>
+          </div>
+      </div>
+      
       <!-- Scrollable Area untuk Tabel -->
       <main class="flex-1 overflow-y-auto px-8 pb-8">
         
@@ -70,9 +123,10 @@
             <h1 class="text-2xl font-bold text-gray-900">Manajemen Kepegawaian</h1>
             <p class="text-gray-500 text-sm mt-1">Kelola data staf, guru, dan hak akses sistem.</p>
           </div>
-          <button @click="showModal = true" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg text-sm font-bold shadow-sm transition-colors">
+          
+          <!-- <button @click="showModal = true" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg text-sm font-bold shadow-sm transition-colors">
             + Tambah Pegawai
-          </button>
+          </button> -->
         </div>
 
         <!-- Tabel Staf -->
@@ -114,7 +168,11 @@
           </table>
         </div>
 
+        
       </main>
+      <div class="w-full h-10 px-10">
+          <p class="text-xs text-grey-200 text-right mt-2">Based on Diatom v.0.0.1</p>
+      </div>
     </div>
 
     <!-- Modal Tambah Pegawai (Dipertahankan seperti semula) -->
@@ -162,6 +220,7 @@
         </form>
       </div>
     </div>
+  </div>
   </div>
 </template>
 
