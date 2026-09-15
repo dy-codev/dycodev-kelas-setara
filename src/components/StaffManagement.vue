@@ -41,11 +41,11 @@
             Daftar Siswa
           </a>
           <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-xl text-sm font-medium transition-colors">
-            Buku Nilai (Gradebook)
+            Manajemen Course
           </a>
           <!-- Menu Aktif -->
           <a href="#" class="flex items-center gap-3 px-4 py-3 bg-indigo-50 text-indigo-700 rounded-xl text-sm font-bold transition-colors border border-indigo-100">
-            Manajemen Kelas & Akses
+            Manajemen Kepegawaian
           </a>
           <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-xl text-sm font-medium transition-colors">
             Settings
@@ -55,26 +55,45 @@
 
       <!-- Logout Button -->
       <div class="p-0">
+        <!-- Ornamen Concave Atas (Otomatis terdorong naik) -->
         <div class="w-10 h-4 bg-slate-900">
           <div class="w-10 h-4 bg-[#F4F7F9] rounded-bl-2xl"></div>
         </div>
+  
         <div class="flex">
-          <div class="w-2/3 flex bg-slate-900 items-center gap-3 cursor-pointer px-3 py-1.5 pt-3 rounded-tr-2xl">
-            <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-sm">
-              A
+          <!-- WADAH TUNGGAL (Kiri): Menggabungkan Logout & Profile tanpa celah -->
+          <div class="w-2/3 bg-slate-900 rounded-tr-2xl transition-all duration-300">
+      
+            <!-- Area Menu Log Keluar -->
+            <div class="grid transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]"
+                :class="isProfileMenuOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'">
+              <div class="overflow-hidden">
+                <a href="#" @click.prevent="handleLogout" class="block px-4 py-3 text-gray-400 hover:text-red-500 text-sm font-medium transition-colors">
+                  Log Keluar
+                </a> 
+              </div>
             </div>
-            <span class="text-sm font-medium text-white mr-2">Profile ⌄</span>
+      
+            <!-- Area Info Profil (Trigger) -->
+            <div @click="isProfileMenuOpen = !isProfileMenuOpen" 
+                class="flex items-center gap-3 cursor-pointer px-3 py-1.5 pt-3 overflow-hidden">
+              <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-sm shrink-0">
+                {{ adminInitial }}
+              </div>
+              <span class="text-sm font-medium text-white mr-2 flex items-center gap-1 truncate">
+                {{ adminName }}
+                <span class="inline-block transition-transform duration-300" :class="{ 'rotate-180': isProfileMenuOpen }">⌄</span>
+              </span>
+            </div>      
           </div>
+    
+          <!-- Area Ornamen (Kanan): Otomatis meregang tingginya -->
           <div class="w-1/4">
             <div class="w-10 h-full bg-slate-900">
               <div class="w-10 h-full bg-[#F4F7F9] rounded-bl-2xl"></div>
             </div>
           </div>
         </div>
-        
-        <!-- <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-xl text-sm font-medium transition-colors">
-          Log Keluar
-        </a> -->
       </div>
     </aside>
 
@@ -103,9 +122,15 @@
           </button> -->
           <div class="flex items-center gap-3 cursor-pointer bg-trasnparent px-3 py-1.5 rounded-2xl shadow-sm">
             <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-sm">
-              G
+              1
             </div>
-            <span class="text-sm font-medium text-white mr-2">Guru</span>
+            <span class="text-sm font-medium text-white mr-2">Context 1</span>
+          </div>
+          <div class="flex items-center gap-3 cursor-pointer bg-trasnparent px-3 py-1.5 rounded-2xl shadow-sm">
+            <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-sm">
+              2
+            </div>
+            <span class="text-sm font-medium text-white mr-2">Context 2</span>
           </div>
         </div>
       </header>
@@ -225,12 +250,18 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { supabase } from '../supabase'
+import { useRouter } from 'vue-router'
+
+// Inisialisasi router
+const router = useRouter()
 
 const staffList = ref([])
 const isLoading = ref(true)
 const showModal = ref(false)
+const adminName = ref('Memuat...')
+const isProfileMenuOpen = ref(false)
 
 // State Form
 const form = ref({
@@ -311,7 +342,55 @@ const submitNewStaff = async () => {
   }
 }
 
+// Mengambil huruf pertama untuk ikon bundar
+const adminInitial = computed(() => {
+  return adminName.value !== 'Memuat...' ? adminName.value.charAt(0).toUpperCase() : ''
+})
+
+const fetchCurrentProfile = async () => {
+  try {
+    // 1. Ambil sesi user yang sedang login dari Supabase Auth
+    const { data: authData, error: authError } = await supabase.auth.getUser()
+    
+    if (authError || !authData.user) throw new Error('Sesi tidak ditemukan')
+
+    // 2. Cari nama lengkap berdasarkan UID di tabel staff
+    const { data: staffData, error: staffError } = await supabase
+      .from('staff')
+      .select('full_name')
+      .eq('id', authData.user.id)
+      .single()
+
+    if (staffError) throw staffError
+
+    // 3. Potong nama menjadi kata pertama saja agar rapi di sidebar
+    if (staffData && staffData.full_name) {
+      adminName.value = staffData.full_name.split(' ')[0]
+    }
+  } catch (error) {
+    console.error('Gagal memuat profil:', error.message)
+    adminName.value = 'Admin' // Fallback jika gagal
+  }
+}
+
+// Logout
+const handleLogout = async () => {
+  try {
+    // 1. Hapus sesi di sisi peladen (Supabase) dan peramban lokal
+    const { error } = await supabase.auth.signOut()
+    
+    if (error) throw error
+
+    // 2. Arahkan pengguna kembali ke halaman utama (KelasSetara.vue)
+    router.push('/')
+  } catch (error) {
+    console.error('Terjadi kesalahan saat logout:', error.message)
+    alert('Gagal logout: ' + error.message)
+  }
+}
+
 onMounted(() => {
   fetchStaff()
+  fetchCurrentProfile()
 })
 </script>
