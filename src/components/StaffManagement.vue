@@ -68,7 +68,7 @@
             <div class="grid transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]"
                 :class="isProfileMenuOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'">
               <div class="overflow-hidden">
-                <a href="#" class="block px-4 py-3 text-gray-400 hover:text-red-500 text-sm font-medium transition-colors">
+                <a href="#" @click.prevent="handleLogout" class="block px-4 py-3 text-gray-400 hover:text-red-500 text-sm font-medium transition-colors">
                   Log Keluar
                 </a> 
               </div>
@@ -252,6 +252,10 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { supabase } from '../supabase'
+import { useRouter } from 'vue-router'
+
+// Inisialisasi router
+const router = useRouter()
 
 const staffList = ref([])
 const isLoading = ref(true)
@@ -366,6 +370,22 @@ const fetchCurrentProfile = async () => {
   } catch (error) {
     console.error('Gagal memuat profil:', error.message)
     adminName.value = 'Admin' // Fallback jika gagal
+  }
+}
+
+// Logout
+const handleLogout = async () => {
+  try {
+    // 1. Hapus sesi di sisi peladen (Supabase) dan peramban lokal
+    const { error } = await supabase.auth.signOut()
+    
+    if (error) throw error
+
+    // 2. Arahkan pengguna kembali ke halaman utama (KelasSetara.vue)
+    router.push('/')
+  } catch (error) {
+    console.error('Terjadi kesalahan saat logout:', error.message)
+    alert('Gagal logout: ' + error.message)
   }
 }
 
