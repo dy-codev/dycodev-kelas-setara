@@ -60,10 +60,10 @@ const updateBackground = () => {
     <div class="bg-slate-900 sm:pl-10 sm:pr-2 sm:pt-10 sm:pb-2 h-screen w-full flex flex-col box-border">
       
         <!-- Wrapper Utama Dashboard: Full screen, Flexbox -->
-        <div class="flex h-full bg-[#F4F7F9] font-sans rounded-2xl shadow-2xl overflow-hidden border border-slate-900">
+        <div class="flex flex-col-reverse md:flex-row h-full bg-[#F4F7F9] font-sans rounded-2xl shadow-2xl overflow-hidden border border-slate-900">
     
             <!-- SIDEBAR (KIRI) -->
-            <aside class="w-[clamp(10rem,25vw,24rem)] shrink-0 bg-[#F4F7F9] flex flex-col justify-between">
+            <aside class="w-full md:w-1/2 2xl:w-[clamp(10rem,25vw,24rem)] shrink-0 bg-[#F4F7F9] flex flex-col justify-between">
                 <div class="h-full flex flex-col justify-center border border-gray-200 rounded-2xl sm:mt-4 sm:mr-4 sm:ml-4">
                    
                     <!-- Login Form -->
@@ -109,7 +109,6 @@ const updateBackground = () => {
                     </div>
                 </div>
 
-
                 <!-- Logout Button -->
                 <div class="p-0">
                     <!-- Ornamen Concave Atas (Otomatis terdorong naik) -->
@@ -119,21 +118,10 @@ const updateBackground = () => {
   
                     <div class="flex">
                         <!-- WADAH TUNGGAL (Kiri): Menggabungkan Logout & Profile tanpa celah -->
-                        <div class="w-2/3 bg-slate-900 rounded-tr-2xl transition-all duration-300">
-      
-                            <!-- Area Menu Log Keluar -->
-                            <div class="grid transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]"
-                                :class="isProfileMenuOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'">
-                                <div class="overflow-hidden">
-                                    <a href="#" @click.prevent="handleLogout" class="block px-4 py-3 text-gray-400 hover:text-red-500 text-sm font-medium transition-colors">
-                                        Log Keluar
-                                    </a> 
-                                </div>
-                            </div>
+                        <div class="w-1/2 md:w-2/3 bg-slate-900 rounded-tr-2xl transition-all duration-300">
       
                             <!-- Area Info Profil (Trigger) -->
-                            <div @click="isProfileMenuOpen = !isProfileMenuOpen" 
-                                class="flex items-center gap-3 cursor-pointer px-3 py-1.5 pt-3 overflow-hidden">
+                            <div class="flex items-center gap-3 cursor-pointer px-3 py-1.5 pt-3 overflow-hidden">
                                 <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-sm shrink-0">
                                     👤
                                 </div>
@@ -141,16 +129,19 @@ const updateBackground = () => {
                                     <span class="text-xs text-white">Belum punya akun?</span>
                                     <span class="text-sm font-medium text-white mr-2 flex items-center gap-1 truncate">
                                         Register
-                                        <span class="inline-block transition-transform duration-300" :class="{ 'rotate-180': isProfileMenuOpen }">⌄</span>
                                     </span>
                                 </div>
                             </div>      
                         </div>
     
                         <!-- Area Ornamen (Kanan): Otomatis meregang tingginya -->
-                        <div class="w-1/4">
-                            <div class="w-10 h-full bg-slate-900">
-                                <div class="w-10 h-full bg-[#F4F7F9] rounded-bl-2xl"></div>
+                        <div class="w-1/2 md:w-1/4">
+                            <div class="w-full md:w-10 h-full bg-slate-900">
+                                <div class="w-full md:w-10 h-full bg-[#F4F7F9] rounded-bl-2xl">
+                                    <div class="w-full h-10 px-10 pt-4 sm:block md:hidden">
+                                        <p class="text-xs text-grey-200 text-right mt-2">Based on Diatom v.0.0.1</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -169,7 +160,7 @@ const updateBackground = () => {
                         <!-- konten utama -->
                 </main>
             
-                <div class="w-full h-10 px-10">
+                <div class="w-full h-10 px-10 hidden md:block">
                     <p class="text-xs text-grey-200 text-right mt-2">Based on Diatom v.0.0.1</p>
                 </div>
             </div>
