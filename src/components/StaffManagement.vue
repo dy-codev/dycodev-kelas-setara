@@ -184,7 +184,9 @@
                 <tr v-else-if="staffList.length === 0" class="text-center">
                   <td colspan="5" class="px-6 py-10 text-gray-400">Belum ada data pegawai.</td>
                 </tr>
-                <tr v-else v-for="staff in staffList" :key="staff.id" class="hover:bg-gray-50/80 transition-colors">
+                <tr v-else v-for="staff in staffList" :key="staff.id" 
+                    @click="openStaffDetail(staff)"
+                    class="hover:bg-gray-50/80 transition-colors cursor-pointer active:bg-gray-100">
                   
                   <!-- Cell NIP -->
                   <td class="hidden md:table-cell px-3 md:px-6 py-4 text-sm font-mono text-gray-500">{{ staff.nip }}</td>
@@ -207,7 +209,8 @@
                   
                   <!-- Cell Aksi -->
                   <td class="hidden md:table-cell px-3 md:px-6 py-4 text-right">
-                    <button class="text-sm bg-white border border-gray-200 text-gray-600 hover:border-indigo-300 hover:text-indigo-600 px-3 py-1.5 rounded-lg font-medium shadow-sm transition-all">
+                    <!-- Tambahkan .stop di sini agar klik tidak merembet ke <tr> -->
+                    <button @click.stop="console.log('Edit dari Desktop')" class="text-sm bg-white border border-gray-200 text-gray-600 hover:border-indigo-300 hover:text-indigo-600 px-3 py-1.5 rounded-lg font-medium shadow-sm transition-all">
                       Edit
                     </button>
                   </td>
@@ -384,6 +387,81 @@
       </div>
     </div>
   </transition>
+
+  <!-- DATA PREVIEW OVERLAY (Right Side Drawer) -->
+  <transition
+    enter-active-class="transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]"
+    enter-from-class="opacity-0 translate-x-12"
+    enter-to-class="opacity-100 translate-x-0"
+    leave-active-class="transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]"
+    leave-from-class="opacity-100 translate-x-0"
+    leave-to-class="opacity-0 translate-x-12"
+  >
+    <!-- flex items-center justify-end memastikan posisi di tengah vertikal & mentok kanan -->
+    <div v-if="isDetailDrawerOpen" class="fixed inset-0 z-50 flex items-center justify-end bg-slate-900/40 backdrop-blur-sm p-0 md:p-4">
+      
+      <!-- Latar transparan untuk area tutup (area kiri yang kosong) -->
+      <div class="absolute inset-0" @click="isDetailDrawerOpen = false"></div>
+
+      <!-- Kartu Detail: Menempel Kanan (di mobile), Melengkung di Kiri -->
+      <div class="relative bg-[#F4F7F9] rounded-l-[2rem] md:rounded-[2rem] p-6 shadow-[-20px_0_40px_rgba(0,0,0,0.1)] border-y border-l md:border border-white w-[85vw] md:w-[24rem] h-[95vh] flex flex-col">
+        
+        <!-- Header Drawer -->
+        <div class="flex justify-between items-center mb-6 px-2 shrink-0">
+          <span class="text-[11px] font-black text-slate-400 uppercase tracking-widest bg-slate-200/50 px-3 py-1 rounded-full border border-slate-200">Data Preview</span>
+          <button @click="isDetailDrawerOpen = false" class="text-slate-400 bg-white hover:bg-slate-50 w-8 h-8 rounded-full flex items-center justify-center shadow-sm transition-colors">
+            ✕
+          </button>
+        </div>
+        
+        <!-- Area Konten (Bisa Di-scroll jika panjang) -->
+        <div v-if="selectedStaff" class="flex-1 overflow-y-auto px-2 custom-scrollbar">
+          
+          <!-- Avatar & Nama Utama -->
+          <div class="flex items-center gap-4 mb-6 p-4 bg-white rounded-2xl shadow-sm border border-slate-100">
+            <div class="w-14 h-14 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-2xl font-black shrink-0">
+              {{ selectedStaff.full_name.charAt(0).toUpperCase() }}
+            </div>
+            <div>
+              <h3 class="text-lg font-bold text-slate-900 leading-tight">{{ selectedStaff.full_name }}</h3>
+              <p class="text-sm font-medium text-indigo-600 mt-0.5">{{ selectedStaff.position }}</p>
+            </div>
+          </div>
+
+          <!-- Metadata Detail -->
+          <div class="space-y-5 bg-white p-5 rounded-2xl border border-slate-100 shadow-sm mb-6">
+            <div>
+              <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Nomor Induk Pegawai (NIP)</p>
+              <p class="text-sm font-semibold text-slate-700">{{ selectedStaff.nip }}</p>
+            </div>
+            
+            <div class="h-px bg-slate-100 w-full"></div>
+            
+            <div>
+              <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Hak Akses Sistem (Roles)</p>
+              <div class="flex flex-wrap gap-1.5">
+                <span v-for="role in selectedStaff.roles" :key="role" 
+                      class="px-2.5 py-1 bg-slate-100 text-slate-600 border border-slate-200 text-[11px] rounded-md font-bold uppercase tracking-wider">
+                  {{ role }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Action Buttons di Bawah (Fixed) -->
+        <div class="pt-4 mt-auto border-t border-slate-200/60 flex gap-3 px-2 shrink-0">
+          <button class="flex-1 py-3 bg-white border border-rose-200 text-rose-600 hover:bg-rose-50 rounded-xl text-sm font-bold transition-colors">
+            Hapus
+          </button>
+          <button class="flex-1 py-3 bg-indigo-600 text-white hover:bg-indigo-700 rounded-xl text-sm font-bold shadow-sm transition-colors">
+            Edit Data
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </transition>
 </template>
 
 <script setup>
@@ -400,6 +478,8 @@ const showModal = ref(false)
 const adminName = ref('Memuat...')
 const isProfileMenuOpen = ref(false)
 const isMobileMenuOpen = ref(false)
+const isDetailDrawerOpen = ref(false)
+const selectedStaff = ref(null)
 
 // State Form
 const form = ref({
@@ -478,6 +558,12 @@ const submitNewStaff = async () => {
   } finally {
     isLoading.value = false
   }
+}
+
+// Fungsi untuk membuka laci dan melempar data baris ke dalamnya
+const openStaffDetail = (staff) => {
+  selectedStaff.value = staff
+  isDetailDrawerOpen.value = true
 }
 
 // Mengambil huruf pertama untuk ikon bundar
