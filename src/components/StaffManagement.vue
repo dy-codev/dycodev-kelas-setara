@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-slate-900 sm:pl-10 sm:pr-2 sm:pb-2 h-screen w-full flex flex-col box-border">
+  <div :class="['bg-slate-900 sm:pl-10 sm:pb-2 h-screen w-full flex flex-col box-border', isDetailDrawerOpen ? 'sm:pr-0' : 'sm:pr-2']">
     <div class=" flex justify-between p-2.5 sm:my-2.5">
       <div class="flex gap-2">
         <svg class="w-[34px] h-[34px] shrink-0" viewBox="0 0 40 40" fill="none">
@@ -398,18 +398,21 @@
     leave-to-class="opacity-0 translate-x-12"
   >
     <!-- flex items-center justify-end memastikan posisi di tengah vertikal & mentok kanan -->
-    <div v-if="isDetailDrawerOpen" class="fixed inset-0 z-50 flex items-center justify-end bg-slate-900/40 backdrop-blur-sm p-0 md:p-4">
+    <div v-if="isDetailDrawerOpen" class="fixed inset-0 z-50 flex flex-col items-end justify-center pt-10 bg-slate-900/40 backdrop-blur-sm p-0">
       
       <!-- Latar transparan untuk area tutup (area kiri yang kosong) -->
       <div class="absolute inset-0" @click="isDetailDrawerOpen = false"></div>
 
+      <div class="w-5 h-5 bg-slate-900">
+          <div class="w-5 h-5 bg-[#F4F7F9]/60 rounded-br-2xl backdrop-blur-sm"></div>
+      </div>
       <!-- Kartu Detail: Menempel Kanan (di mobile), Melengkung di Kiri -->
-      <div class="relative bg-[#F4F7F9] rounded-l-[2rem] md:rounded-[2rem] p-6 shadow-[-20px_0_40px_rgba(0,0,0,0.1)] border-y border-l md:border border-white w-[85vw] md:w-[24rem] h-[95vh] flex flex-col">
+      <div class="relative bg-slate-900 rounded-l-[2rem] p-6 shadow-[-20px_0_40px_rgba(0,0,0,0.1)] border-y border-l md:border border-slate-900 w-[85vw] md:w-[24rem] h-[65vh] flex flex-col">
         
         <!-- Header Drawer -->
         <div class="flex justify-between items-center mb-6 px-2 shrink-0">
-          <span class="text-[11px] font-black text-slate-400 uppercase tracking-widest bg-slate-200/50 px-3 py-1 rounded-full border border-slate-200">Data Preview</span>
-          <button @click="isDetailDrawerOpen = false" class="text-slate-400 bg-white hover:bg-slate-50 w-8 h-8 rounded-full flex items-center justify-center shadow-sm transition-colors">
+          <span class="text-[11px] font-black text-slate-400 uppercase tracking-widest bg-slate-200/50 px-3 py-1 rounded-full border border-slate-200/60">Data Preview</span>
+          <button @click="isDetailDrawerOpen = false" class="text-slate-200 hover:text-slate-400 bg-slate-200/50 hover:bg-slate-50 w-8 h-8 rounded-full flex items-center justify-center shadow-sm transition-colors">
             ✕
           </button>
         </div>
@@ -418,24 +421,24 @@
         <div v-if="selectedStaff" class="flex-1 overflow-y-auto px-2 custom-scrollbar">
           
           <!-- Avatar & Nama Utama -->
-          <div class="flex items-center gap-4 mb-6 p-4 bg-white rounded-2xl shadow-sm border border-slate-100">
+          <div class="flex items-center gap-4 mb-6 p-4 bg-slate-900 rounded-2xl shadow-sm border border-slate-200/60">
             <div class="w-14 h-14 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-2xl font-black shrink-0">
               {{ selectedStaff.full_name.charAt(0).toUpperCase() }}
             </div>
             <div>
-              <h3 class="text-lg font-bold text-slate-900 leading-tight">{{ selectedStaff.full_name }}</h3>
+              <h3 class="text-lg font-bold text-slate-100 leading-tight">{{ selectedStaff.full_name }}</h3>
               <p class="text-sm font-medium text-indigo-600 mt-0.5">{{ selectedStaff.position }}</p>
             </div>
           </div>
 
           <!-- Metadata Detail -->
-          <div class="space-y-5 bg-white p-5 rounded-2xl border border-slate-100 shadow-sm mb-6">
+          <div class="space-y-5 bg-slate-900 p-5 rounded-2xl border border-slate-200/60 shadow-sm mb-6">
             <div>
               <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Nomor Induk Pegawai (NIP)</p>
-              <p class="text-sm font-semibold text-slate-700">{{ selectedStaff.nip }}</p>
+              <p class="text-sm font-semibold text-slate-200">{{ selectedStaff.nip }}</p>
             </div>
             
-            <div class="h-px bg-slate-100 w-full"></div>
+            <div class="h-px bg-slate-200/60 w-full"></div>
             
             <div>
               <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Hak Akses Sistem (Roles)</p>
@@ -459,6 +462,9 @@
           </button>
         </div>
 
+      </div>
+      <div class="w-5 h-5 bg-slate-900">
+          <div class="w-5 h-5 bg-[#F4F7F9]/60 rounded-tr-2xl backdrop-blur-sm"></div>
       </div>
     </div>
   </transition>
