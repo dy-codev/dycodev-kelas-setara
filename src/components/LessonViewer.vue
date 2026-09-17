@@ -17,7 +17,22 @@ const props = defineProps({
 const editorCode = ref('')
 const codeOutput = ref('Tekan tombol "Run Code" untuk menjalankan program Python...')
 const isRunning = ref(false)
+const viewerContainer = ref(null)
+const isFullscreen = ref(false)
 let pyodideInstance = null
+
+// Fungsi untuk masuk/keluar mode fullscreen
+const toggleFullscreen = () => {
+  if (!document.fullscreenElement) {
+    // Masuk ke fullscreen
+    viewerContainer.value?.requestFullscreen().catch(err => {
+      console.error(`Gagal masuk mode fullscreen: ${err.message}`)
+    })
+  } else {
+    // Keluar dari fullscreen
+    document.exitFullscreen()
+  }
+}
 
 // Memuat Pyodide secara asinkron dari CDN saat komponen dipasang
 onMounted(async () => {
@@ -27,6 +42,9 @@ onMounted(async () => {
     script.async = true
     document.head.appendChild(script)
   }
+  document.addEventListener('fullscreenchange', () => {
+    isFullscreen.value = !!document.fullscreenElement
+  })
 })
 
 // Pantau perubahan materi untuk memuat kode bawaan berbasis Python
@@ -158,18 +176,65 @@ const getEmbedUrl = (url) => {
 
       <!-- JIKA TIPE MATERI BIASA (FULL WIDTH) -->
       <div v-else class="prose prose-slate prose-indigo max-w-none prose-headings:font-bold prose-a:text-indigo-600 prose-pre:bg-slate-900 prose-pre:text-slate-100 prose-pre:rounded-xl">
+        
+        <!-- 1. Iframe Presentasi -->
         <div v-if="lesson.slideUrl" class="aspect-video w-full mb-8 rounded-2xl overflow-hidden shadow-sm bg-slate-100 border border-slate-200">
           <iframe class="w-full h-full" :src="lesson.slideUrl" frameborder="0" allowfullscreen="true" webkitallowfullscreen="true"></iframe>
         </div>
+        
+        <!-- 2. Iframe PDF -->
         <div v-if="lesson.pdfUrl" class="w-full min-h-[600px] mb-8 rounded-2xl overflow-hidden shadow-sm bg-slate-100 border border-slate-200">
           <iframe class="w-full h-full min-h-[600px]" :src="lesson.pdfUrl" frameborder="0" allowfullscreen></iframe>
         </div>
+        
+        <!-- 3. Iframe Praktik Eksternal -->
         <div v-if="lesson.practiceUrl" class="w-full min-h-[650px] mb-8 rounded-2xl overflow-hidden shadow-sm border border-slate-200">
           <iframe class="w-full h-full min-h-[650px]" :src="lesson.practiceUrl" frameborder="0" allowfullscreen></iframe>
         </div>
+        
+        <!-- 4. RENDER 3D MODEL VIEWER -->
+        <!-- Tambahkan ref="viewerContainer" di sini -->
+        <div v-if="lesson.model3dUrl" ref="viewerContainer" class="w-full h-[400px] sm:h-[500px] mb-8 rounded-2xl overflow-hidden shadow-md bg-slate-900 border border-slate-700 relative flex flex-col">
+          
+          <!-- Lencana Kiri Atas -->
+          <div class="absolute top-4 left-4 z-10 px-3 py-1.5 bg-slate-800/80 backdrop-blur-sm rounded-lg border border-slate-600 shadow-sm flex items-center gap-2 text-xs font-bold text-emerald-400">
+            <span>🧊</span> Model 3D Interaktif
+          </div>
+
+          <!-- Tombol Fullscreen Kanan Atas -->
+          <button 
+            @click="toggleFullscreen" 
+            class="absolute top-4 right-4 z-10 p-2 bg-slate-800/80 hover:bg-slate-700 backdrop-blur-sm rounded-lg border border-slate-600 shadow-sm text-slate-300 hover:text-white transition-colors"
+            :title="isFullscreen ? 'Keluar Layar Penuh' : 'Layar Penuh'"
+          >
+            <!-- Ikon Expand -->
+            <svg v-if="!isFullscreen" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+            </svg>
+            <!-- Ikon Collapse -->
+            <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 14h6m0 0v6m0-6l-7 7m17-11h-6m0 0V4m0 6l7-7M4 10h6m0 0V4m0 6l-7-7m17 11h-6m0 0v6m0-6l7 7" />
+            </svg>
+          </button>
+          
+          <model-viewer 
+            :src="lesson.model3dUrl" 
+            :alt="lesson.title"
+            camera-controls 
+            environment-image="neutral"
+            exposure="1"
+            shadow-intensity="2"
+            min-camera-orbit="auto auto 0m"
+            class="w-full flex-1 outline-none"
+          ></model-viewer>
+        </div>
+        
+        <!-- 5. Render Komponen Vue Ekstra (Jika Ada) -->
         <div v-if="lesson.component">
           <component :is="lesson.component" />
         </div>
+        
+        <!-- 6. Render Teks / HTML Konvensional -->
         <div v-else-if="lesson.content" v-html="lesson.content"></div>
       </div>
 

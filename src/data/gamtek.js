@@ -20,6 +20,7 @@ export const gamtekSyllabusData = [
                 { title: null, url: null, type: null },
                 { title: null, url: null, type: null }
             ],
+            model3dUrl: '/Isometri1.glb',
             content: `
             <h3>Pengantar Gambar Teknik</h3>
             `
