@@ -285,56 +285,81 @@
   <!-- Modal Tambah Pegawai (Dipertahankan seperti semula) -->
   <div v-if="showModal" class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
     <div class="bg-slate-900 rounded-2xl shadow-2xl w-full max-w-md p-2">
-      <div class="bg-[#F4F7F9] border rounded-xl p-7">
-        <h2 class="text-xl font-bold text-gray-900 mb-6">Tambah Pegawai Baru</h2>
-  
-        <form @submit.prevent="submitNewStaff" class="space-y-4">
-          <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Email Pegawai</label>
-            <input v-model="form.email" type="email" required
-              class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all"
-              placeholder="email@sekolah.com">
+      <div class="bg-[#F4F7F9] rounded-xl p-0 pt-16 relative">
+        <div class="absolute left-0 top-0 flex">
+          <div class="flex flex-col">
+            <div class="bg-slate-900 p-4 rounded-br-xl">
+              <h2 class="text-xl font-bold text-gray-200 inline">Tambah Pegawai Baru</h2>
+            </div>
+            <div class="w-5 h-10 bg-slate-900">
+              <div class="w-5 h-10 bg-[#F4F7F9] rounded-tl-xl"></div>
+            </div>
           </div>
-  
-          <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Nomor Induk Pegawai (NIP)</label>
-            <input v-model="form.nip" type="text" required
-              class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all"
-              placeholder="Contoh: 19920602...">
+          <div class="w-10 h-10 bg-slate-900">
+            <div class="w-10 h-10 bg-[#F4F7F9] rounded-tl-xl"></div>
           </div>
-  
-          <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Nama Lengkap</label>
-            <input v-model="form.full_name" type="text" required
-              class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all"
-              placeholder="Nama berserta gelar">
+        </div>
+        
+        
+        <form @submit.prevent="submitNewStaff" class="mt-4">
+          <div class="px-7 space-y-4">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-1.5">Email Pegawai</label>
+              <input v-model="form.email" type="email" required
+                class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all"
+                placeholder="email@sekolah.com">
+            </div>
+    
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-1.5">Nomor Induk Pegawai (NIP)</label>
+              <input v-model="form.nip" type="text" required
+                class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all"
+                placeholder="Contoh: 19920602...">
+            </div>
+    
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-1.5">Nama Lengkap</label>
+              <input v-model="form.full_name" type="text" required
+                class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all"
+                placeholder="Nama berserta gelar">
+            </div>
+    
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-1.5">Jabatan Struktural</label>
+              <select v-model="form.position" @change="autoAssignRole" required
+                class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all cursor-pointer">
+                <option value="" disabled>Pilih Jabatan...</option>
+                <option v-for="(roles, position) in roleMapping" :key="position" :value="position">
+                  {{ position }}
+                </option>
+              </select>
+              <p v-if="form.roles.length" class="text-xs text-gray-500 mt-2 flex gap-1.5">
+                <span>↳</span> Sistem akan otomatis memberikan hak akses: <span class="font-bold text-indigo-600">{{
+                  form.roles.join(', ') }}</span>
+              </p>
+            </div>
           </div>
-  
-          <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Jabatan Struktural</label>
-            <select v-model="form.position" @change="autoAssignRole" required
-              class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all cursor-pointer">
-              <option value="" disabled>Pilih Jabatan...</option>
-              <option v-for="(roles, position) in roleMapping" :key="position" :value="position">
-                {{ position }}
-              </option>
-            </select>
-            <p v-if="form.roles.length" class="text-xs text-gray-500 mt-2 flex gap-1.5">
-              <span>↳</span> Sistem akan otomatis memberikan hak akses: <span class="font-bold text-indigo-600">{{
-                form.roles.join(', ') }}</span>
-            </p>
-          </div>
-  
-          <div class="flex justify-end gap-3 pt-4 mt-6 border-t border-gray-100">
-            <button type="button" @click="showModal = false"
-              class="px-5 py-2.5 text-sm font-semibold text-gray-700 bg-white border border-gray-200 hover:bg-gray-50 rounded-xl transition-colors">
-              Batal
-            </button>
-            <button type="submit"
-              class="px-5 py-2.5 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-sm transition-colors"
-              :disabled="isLoading">
-              {{ isLoading ? 'Menyimpan...' : 'Simpan Pegawai' }}
-            </button>
+
+          <div class="flex flex-col items-end mt-2">
+            <div class="w-15 h-5 bg-slate-900">
+              <div class="w-10 h-5 bg-[#F4F7F9] rounded-br-xl"></div>
+            </div>
+            <div class="flex justify-end items-end">
+              <div class="w-10 h-10 bg-slate-900">
+                <div class="w-10 h-10 bg-[#F4F7F9] rounded-br-xl"></div>
+              </div>
+              <div class="inline-flex pl-3 pt-3 pr-1 pb-1 gap-3 bg-slate-900 rounded-tl-xl">
+                <button type="button" @click="showModal = false"
+                  class="px-5 py-2.5 text-sm font-semibold text-gray-700 bg-white border border-gray-200 hover:bg-gray-50 rounded-lg transition-colors">
+                  Batal
+                </button>
+                <button type="submit"
+                  class="px-5 py-2.5 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-sm transition-colors"
+                  :disabled="isLoading">
+                  {{ isLoading ? 'Menyimpan...' : 'Simpan Pegawai' }}
+                </button>
+              </div>
+            </div>
           </div>
         </form>
       </div>
