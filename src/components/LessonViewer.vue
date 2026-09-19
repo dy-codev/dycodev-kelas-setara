@@ -20,6 +20,34 @@ const isRunning = ref(false)
 const viewerContainer = ref(null)
 const isFullscreen = ref(false)
 let pyodideInstance = null
+// State untuk menyimpan titik koordinat kamera 3D
+const currentOrbit = ref('45deg 55deg auto') // Default: Tampak Isometri
+
+// Fungsi untuk memindahkan kamera ke pandangan ortogonal absolut
+const setCameraView = (view) => {
+  switch(view) {
+    case 'depan': 
+      // Theta 0deg (Tengah), Phi 90deg (Sejajar mata)
+      currentOrbit.value = '0deg 90deg auto'
+      break
+    case 'kanan': 
+      // Theta 90deg (Samping Kanan)
+      currentOrbit.value = '90deg 90deg auto'
+      break
+    case 'kiri': 
+      // Theta -90deg (Samping Kiri)
+      currentOrbit.value = '-90deg 90deg auto'
+      break
+    case 'atas': 
+      // Theta 0deg (Menjaga orientasi atas sejajar dengan depan), Phi 0deg (Tegak lurus dari atas)
+      currentOrbit.value = '0deg 0deg auto'
+      break
+    case 'isometri': 
+      // Standar sudut isometrik
+      currentOrbit.value = '45deg 55deg auto'
+      break
+  }
+}
 
 // Fungsi untuk masuk/keluar mode fullscreen
 const toggleFullscreen = () => {
@@ -193,40 +221,81 @@ const getEmbedUrl = (url) => {
         </div>
         
         <!-- 4. RENDER 3D MODEL VIEWER -->
-        <!-- Tambahkan ref="viewerContainer" di sini -->
-        <div v-if="lesson.model3dUrl" ref="viewerContainer" class="w-full h-[400px] sm:h-[500px] mb-8 rounded-2xl overflow-hidden shadow-md bg-slate-900 border border-slate-700 relative flex flex-col">
+        <!-- <div v-if="lesson.model3dUrl" ref="viewerContainer" class="w-full h-[400px] sm:h-[500px] mb-8 rounded-2xl overflow-hidden shadow-md bg-slate-900 border border-slate-700 relative flex flex-col group"> -->
           
           <!-- Lencana Kiri Atas -->
-          <div class="absolute top-4 left-4 z-10 px-3 py-1.5 bg-slate-800/80 backdrop-blur-sm rounded-lg border border-slate-600 shadow-sm flex items-center gap-2 text-xs font-bold text-emerald-400">
+          <!-- <div class="absolute top-4 left-4 z-10 px-3 py-1.5 bg-slate-800/80 backdrop-blur-sm rounded-lg border border-slate-600 shadow-sm flex items-center gap-2 text-xs font-bold text-emerald-400">
             <span>🧊</span> Model 3D Interaktif
-          </div>
+          </div> -->
 
           <!-- Tombol Fullscreen Kanan Atas -->
-          <button 
+          <!-- <button 
             @click="toggleFullscreen" 
             class="absolute top-4 right-4 z-10 p-2 bg-slate-800/80 hover:bg-slate-700 backdrop-blur-sm rounded-lg border border-slate-600 shadow-sm text-slate-300 hover:text-white transition-colors"
             :title="isFullscreen ? 'Keluar Layar Penuh' : 'Layar Penuh'"
           >
-            <!-- Ikon Expand -->
             <svg v-if="!isFullscreen" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
             </svg>
-            <!-- Ikon Collapse -->
             <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 14h6m0 0v6m0-6l-7 7m17-11h-6m0 0V4m0 6l7-7M4 10h6m0 0V4m0 6l-7-7m17 11h-6m0 0v6m0-6l7 7" />
             </svg>
-          </button>
+          </button> -->
+
+          <!-- PANEL NAVIGASI VIEW (Standard Views) -->
+          <!-- <div class="absolute bottom-6 left-0 right-0 z-10 flex justify-center pointer-events-none">
+            <div class="flex items-center gap-1.5 p-1.5 bg-slate-800/80 backdrop-blur-md rounded-xl border border-slate-600 shadow-lg pointer-events-auto">
+              <button @click="setCameraView('depan')" class="px-3 py-1.5 text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-700 rounded-lg transition-colors">
+                Depan
+              </button>
+              <button @click="setCameraView('kanan')" class="px-3 py-1.5 text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-700 rounded-lg transition-colors">
+                Kanan
+              </button>
+              <button @click="setCameraView('kiri')" class="px-3 py-1.5 text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-700 rounded-lg transition-colors">
+                Kiri
+              </button>
+              <button @click="setCameraView('atas')" class="px-3 py-1.5 text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-700 rounded-lg transition-colors">
+                Atas
+              </button>
+              <div class="w-px h-4 bg-slate-600 mx-1"></div>
+              <button @click="setCameraView('isometri')" class="px-3 py-1.5 text-xs font-bold text-emerald-400 hover:bg-slate-700 rounded-lg transition-colors">
+                Isometri
+              </button>
+            </div>
+          </div>
           
           <model-viewer 
             :src="lesson.model3dUrl" 
             :alt="lesson.title"
+            :camera-orbit="currentOrbit" 
             camera-controls 
             environment-image="neutral"
             exposure="1"
             shadow-intensity="2"
             min-camera-orbit="auto auto 0m"
-            class="w-full flex-1 outline-none"
+            class="w-full flex-1 outline-none transition-all duration-500"
           ></model-viewer>
+        </div> -->
+
+        <!-- 4.5. RENDER SKETCHFAB EMBED (Pihak Ketiga) -->
+        <div v-if="lesson.sketchfabUrl" class="w-full h-[400px] sm:h-[500px] mb-8 rounded-2xl overflow-hidden shadow-md bg-slate-900 border border-slate-700 relative flex flex-col group">
+          
+          <!-- Lencana Kiri Atas -->
+          <div class="absolute top-4 left-4 z-10 px-3 py-1.5 bg-slate-800/80 backdrop-blur-sm rounded-lg border border-slate-600 shadow-sm flex items-center gap-2 text-xs font-bold text-sky-400 pointer-events-none">
+            <span>🌐</span> Sketchfab 3D
+          </div>
+
+          <!-- Iframe Sketchfab -->
+          <iframe 
+            :src="lesson.sketchfabUrl" 
+            title="Sketchfab 3D Model"
+            frameborder="0" 
+            allowfullscreen 
+            mozallowfullscreen="true" 
+            webkitallowfullscreen="true" 
+            allow="autoplay; fullscreen; xr-spatial-tracking" 
+            class="w-full flex-1 outline-none"
+          ></iframe>
         </div>
         
         <!-- 5. Render Komponen Vue Ekstra (Jika Ada) -->
@@ -272,6 +341,62 @@ const getEmbedUrl = (url) => {
           </li>
         </ul>
       </div>
+
+      <div v-if="lesson.model3dUrl" ref="viewerContainer" class="w-full h-[400px] sm:h-[500px] mb-8 rounded-2xl overflow-hidden shadow-md bg-slate-900 border border-slate-700 relative flex flex-col group">
+          
+          <!-- Lencana Kiri Atas -->
+          <div class="absolute top-4 left-4 z-10 px-3 py-1.5 bg-slate-800/80 backdrop-blur-sm rounded-lg border border-slate-600 shadow-sm flex items-center gap-2 text-xs font-bold text-emerald-400">
+            <span>🧊</span> Model 3D Interaktif
+          </div>
+
+          <!-- Tombol Fullscreen Kanan Atas -->
+          <button 
+            @click="toggleFullscreen" 
+            class="absolute top-4 right-4 z-10 p-2 bg-slate-800/80 hover:bg-slate-700 backdrop-blur-sm rounded-lg border border-slate-600 shadow-sm text-slate-300 hover:text-white transition-colors"
+            :title="isFullscreen ? 'Keluar Layar Penuh' : 'Layar Penuh'"
+          >
+            <svg v-if="!isFullscreen" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+            </svg>
+            <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 14h6m0 0v6m0-6l-7 7m17-11h-6m0 0V4m0 6l7-7M4 10h6m0 0V4m0 6l-7-7m17 11h-6m0 0v6m0-6l7 7" />
+            </svg>
+          </button>
+
+          <!-- PANEL NAVIGASI VIEW (Standard Views) -->
+          <div class="absolute bottom-6 left-0 right-0 z-10 flex justify-center pointer-events-none">
+            <div class="flex items-center gap-1.5 p-1.5 bg-slate-800/80 backdrop-blur-md rounded-xl border border-slate-600 shadow-lg pointer-events-auto">
+              <button @click="setCameraView('depan')" class="px-3 py-1.5 text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-700 rounded-lg transition-colors">
+                Depan
+              </button>
+              <button @click="setCameraView('kanan')" class="px-3 py-1.5 text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-700 rounded-lg transition-colors">
+                Kanan
+              </button>
+              <button @click="setCameraView('kiri')" class="px-3 py-1.5 text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-700 rounded-lg transition-colors">
+                Kiri
+              </button>
+              <button @click="setCameraView('atas')" class="px-3 py-1.5 text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-700 rounded-lg transition-colors">
+                Atas
+              </button>
+              <div class="w-px h-4 bg-slate-600 mx-1"></div>
+              <button @click="setCameraView('isometri')" class="px-3 py-1.5 text-xs font-bold text-emerald-400 hover:bg-slate-700 rounded-lg transition-colors">
+                Isometri
+              </button>
+            </div>
+          </div>
+          
+          <model-viewer 
+            :src="lesson.model3dUrl" 
+            :alt="lesson.title"
+            :camera-orbit="currentOrbit" 
+            camera-controls 
+            environment-image="neutral"
+            exposure="1"
+            shadow-intensity="2"
+            min-camera-orbit="auto auto 0m"
+            class="w-full flex-1 outline-none transition-all duration-500"
+          ></model-viewer>
+        </div>
 
       <div v-if="!hasMedia" class="text-center py-16 border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50">
         <span class="text-4xl block mb-3">🎥</span>

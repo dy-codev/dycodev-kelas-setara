@@ -20,7 +20,8 @@ export const gamtekSyllabusData = [
                 { title: null, url: null, type: null },
                 { title: null, url: null, type: null }
             ],
-            model3dUrl: '/Isometri1.glb',
+            model3dUrl: '/turbine__turbofan_engine.glb',
+            sketchfabUrl: 'https://sketchfab.com/models/34a84e6639274e19af7a49957cb4dad1/embed?preload=1',
             content: `
             <h3>Pengantar Gambar Teknik</h3>
             `

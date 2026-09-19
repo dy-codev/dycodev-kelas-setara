@@ -194,6 +194,7 @@ export const informatikaSyllabusData = [
         pdfUrl: null,
         slideUrl: null,
         videoUrl: 'https://www.youtube.com/watch?v=gxmTFXfrMzk',
+        model3dUrl: '/circuit_board_4k/circuit_board_4k.gltf',
         // markdownUrl: '/materi/informatika/perangkat-keras-komputer.md',
         component: markRaw(defineAsyncComponent(() => import('../materi/informatika/fitur-lanjutan-aplikasi-perkantoran.md'))),
         content: `<h3>Apa itu Variable</h3>`,
