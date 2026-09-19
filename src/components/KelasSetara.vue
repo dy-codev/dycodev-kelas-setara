@@ -9,6 +9,7 @@ import ChangePasswordModal from './ChangePasswordModal.vue'
 import { informatikaSyllabusData } from '../data/informatika.js'
 import { backendSyllabusData } from '../data/backend.js'
 import { gamtekSyllabusData } from '../data/gamtek.js'
+import { rsaSyllabusData } from '../data/rsa.js'
 
 // --- State Auth & Modal ---
 const isLoginModalOpen = ref(false)
@@ -98,8 +99,7 @@ const courses = ref([
     title: 'RAMP Safety Awareness',
     category: 'Airport Safety & Operations',
     description: 'Panduan komprehensif keselamatan ground handling, identifikasi bahaya airside, dan prosedur kerja aman di sekitar pesawat.',
-    lessonsCount: 0,
-    practiceCount: 0,
+    syllabus: rsaSyllabusData,
     level: 'Semua Tingkat',
     tag: 'Umum',
     icon: '/ico-airport.png',

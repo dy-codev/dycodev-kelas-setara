@@ -8,6 +8,7 @@ import ChangePasswordModal from './ChangePasswordModal.vue'
 // Import data silabus master
 import { informatikaSyllabusData } from '../data/informatika.js'
 import { gamtekSyllabusData } from '../data/gamtek.js'
+import { rsaSyllabusData } from '../data/rsa.js'
 import { backendSyllabusData } from '../data/backend.js'
 // Nanti jika ada webdev: import { webdevSyllabusData } from '../data/webdev.js'
 
@@ -35,6 +36,14 @@ const coursesDB = {
     totalMeetings: 12,
     storageKey: 'dycodev_lms_progress_gamtek',
     syllabus: gamtekSyllabusData 
+  },
+  rsa: {
+    title: 'RAMP Safety Awareness',
+    badge: '',
+    totalJP: 24,
+    totalMeetings: 12,
+    storageKey: 'dycodev_lms_progress_rsa',
+    syllabus: rsaSyllabusData 
   },
   backend: {
     title: 'Backend Engineering',
