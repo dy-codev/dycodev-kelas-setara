@@ -1,11 +1,12 @@
+<!-- Section 1: Tujuan Pembelaran -->
 <div class="bg-indigo-50/80 border border-indigo-200 rounded-xl p-5 mb-8">
   <h3 class="text-indigo-800 m-0 mb-3 flex items-center gap-2">🎯 Tujuan Pembelajaran</h3>
   <ul class="text-indigo-900 m-0 text-sm">
-    <li>Peserta didik mampu memahami komponen perangkat lunak.</li>
+    <li>Murid mampu memahami komponen perangkat lunak pada sistem komputer dengan baik.</li>
   </ul>
 </div>
 
-
+<!-- Section 2: Materi Pembelaran -->
 Perangkat lunak atau bisa disebut dengan software adalah sebuah data pada sebuah sistem komputer yang disimpan secara digital, termasuk program komputer dari berbagai informasi yang dapat dibaca dan ditulis oleh komputer. Hal ini menjadikan bagian sistem komputer pada perangkat lunak tidak memiliki wujud secara fisik.
 
 Perlu diketahui, perangkat lunak juga memiliki beberapa bagian atau jenis sesuai dengan kegunaan dan penggunaannya.
@@ -130,4 +131,10 @@ Aplikasi persuratan adalah aplikasi yang berfungsi untuk membantu kalian mengiri
     </div>
   </div>
 
+</div>
+
+<!-- Section 3: Referensi -->
+<div class="bg-slate-50/50 border border-slate-100 rounded-xl p-5 my-6">
+    <h4 class="text-slate-800 m-0 mb-2 flex items-center gap-2">📚 Referensi</h4>
+    <p class="text-slate-900 text-sm m-0"><em>Materi ini merupakan tulisan ulang dari sub-bab "Perangkat Lunak Komputer" (Bab 3 – Sistem Komputer) pada buku Informatika untuk SMK/MAK Kelas X Semester 1 karya Kusmadi, dengan catatan relevansi tren industri terkini di Indonesia (per September 2026).</em></p>
 </div>

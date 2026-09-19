@@ -161,7 +161,9 @@ export const informatikaSyllabusData = [
         slideUrl: null,
         videoUrl: null,
         markdownUrl: '/materi/informatika/quiz.md',
-        content: null
+        content: `
+        Berkolaborasilah dengan teman untuk membuat sebuah grafik terintegrasi di Ms. PowerPoint (menggunakan langkah pada bagian 2 dan 3), lalu modifikasi tampilannya agar lebih menarik dan mudah dibaca.
+        `
       },
       {
         id: 109,
