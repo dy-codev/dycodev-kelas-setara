@@ -1,11 +1,12 @@
+<!-- Section 1: Tujuan Pembelaran -->
 <div class="bg-indigo-50/80 border border-indigo-200 rounded-xl p-5 mb-8">
   <h3 class="text-indigo-800 m-0 mb-3 flex items-center gap-2">🎯 Tujuan Pembelajaran</h3>
   <ul class="text-indigo-900 m-0 text-sm">
-    <li>Menggunakan macam-macam aplikasi media komunikasi yang dapat digunakan  secara bersamaan dengan baik.</li>
+    <li>Murid mampu menggunakan macam-macam aplikasi media komunikasi yang dapat digunakan  secara bersamaan dengan baik.</li>
   </ul>
 </div>
 
-
+<!-- Section 2: Materi Pembelaran -->
 Media komunikasi adalah alat atau aplikasi yang digunakan untuk menyampaikan  dan bertukar informasi dari pengirim kepada penerima informasi. Ketika komunikasi ini dilakukan melalui aplikasi atau internet, kita menyebutnya komunikasi virtual atau **komunikasi daring** (dalam jaringan).
 
 ---
@@ -104,3 +105,9 @@ Komunikasi yang tidak terjadi secara bersamaan. Pesan dikirimkan oleh pengirim d
 - **Microsoft Teams** kini menggantikan posisi Skype sebagai layanan komunikasi resmi Microsoft.
 - **Line** dan **Skype** yang dulu sering dijadikan contoh di materi pembelajaran, kini sudah kurang mencerminkan kebiasaan komunikasi digital masyarakat Indonesia — Skype bahkan sudah resmi tidak beroperasi sejak Mei 2025.
 - Kemampuan **menggunakan beberapa aplikasi komunikasi secara bersamaan** (multitasking) adalah keterampilan inti yang perlu dilatih, bukan sekadar mengetahui cara pakai tiap aplikasi satu per satu.
+
+<!-- Section 3: Referensi -->
+<div class="bg-slate-50/50 border border-slate-100 rounded-xl p-5 my-6">
+    <h4 class="text-slate-800 m-0 mb-2 flex items-center gap-2">📚 Referensi</h4>
+    <p class="text-slate-900 text-sm m-0"><em>Materi ini merupakan tulisan ulang dari sub-bab "Aplikasi Media Komunikasi" (Bab 2 – Teknologi Informasi dan Komunikasi) pada buku Informatika untuk SMK/MAK Kelas X Semester 1 karya Kusmadi, dengan catatan relevansi tren industri terkini di Indonesia (per September 2026).</em></p>
+</div>

@@ -119,7 +119,14 @@ export const informatikaSyllabusData = [
         slideUrl: null,
         videoUrl: null,
         markdownUrl: '/materi/informatika/quiz.md',
-        content: null
+        content: `
+        Cobalah berkolaborasi dengan teman untuk latihan berikut:<br>
+        <ol>
+          <li>Buka Ms. Word dan buat naskah utamanya.</li>
+          <li>Buka Ms. Excel, buat sumber data dengan memasukkan data-data yang diperlukan.</li>
+          <li>Buatlah sebuah *envelope* (amplop) untuk surat undangan wali murid menggunakan fitur **Mailings**.</li>
+        </ol>
+        `
       },
       {
         id: 107,
@@ -136,7 +143,7 @@ export const informatikaSyllabusData = [
         slideUrl: null,
         videoUrl: null,
         // markdownUrl: '/materi/informatika/integrasi-aplikasi-office.md',
-        component: markRaw(defineAsyncComponent(() => import('../materi/informatika/fitur-lanjutan-aplikasi-perkantoran.md'))),
+        component: markRaw(defineAsyncComponent(() => import('../materi/informatika/integrasi-aplikasi-office.md'))),
         content: null
       },
       {
@@ -196,7 +203,7 @@ export const informatikaSyllabusData = [
         videoUrl: 'https://www.youtube.com/watch?v=gxmTFXfrMzk',
         model3dUrl: '/circuit_board_4k/circuit_board_4k.gltf',
         // markdownUrl: '/materi/informatika/perangkat-keras-komputer.md',
-        component: markRaw(defineAsyncComponent(() => import('../materi/informatika/fitur-lanjutan-aplikasi-perkantoran.md'))),
+        component: markRaw(defineAsyncComponent(() => import('../materi/informatika/perangkat-keras-komputer.md'))),
         content: `<h3>Apa itu Variable</h3>`,
       },
       {
