@@ -164,6 +164,7 @@ export const gamtekSyllabusData = [
                 pdfUrl: 'https://drive.google.com/file/d/1WhsuriD-DdbrKdrARwPJ-XelF_uezXjx/preview', 
                 slideUrl: null, 
                 videoUrl: null, 
+                model3dUrl: '/isometri-1.glb',
                 content: null 
             },
             { 
