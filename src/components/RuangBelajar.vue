@@ -311,29 +311,6 @@ const mainTabLabel = computed(() => {
   return '📖 Materi Utama'
 })
 
-// Fungsi untuk mengubah link YouTube standar menjadi link Embed,
-// dan meloloskan URL Google Drive secara langsung
-// const getEmbedUrl = (url) => {
-//   if (!url) return '';
-  
-//   // 1. Cek apakah ini link YouTube
-//   const youtubeMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^"&?\/\s]{11})/);
-//   if (youtubeMatch) {
-//     const videoId = youtubeMatch[1];
-//     return `https://www.youtube.com/embed/${videoId}`;
-//   }
-  
-//   // 2. Cek apakah ini link Google Drive
-//   if (url.includes('drive.google.com')) {
-//     // Kembalikan URL asli, karena Anda sudah memasukkan
-//     // URL versi /preview langsung di data.js Anda
-//     return url; 
-//   }
-
-//   // Fallback untuk URL lainnya
-//   return url;
-// }
-
 // Label tombol aksi dinamis berdasarkan tipe materi
 const completionButtonText = computed(() => {
   const type = currentLessonData.value.type

@@ -19,6 +19,14 @@ defineEmits(['mulai-belajar'])
 
 <template>
   <div class="group relative bg-white/70 backdrop-blur-md border border-white/80 rounded-2xl p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
+    <!-- PITA DRAFT (Hanya muncul jika is_published = false) -->
+    <div v-if="!course.is_published" class="absolute -top-3 -right-3 z-20 pointer-events-none">
+      <div class="bg-amber-400 text-amber-950 text-[10px] font-black px-3 py-1.5 rounded-full shadow-md uppercase tracking-wider border-2 border-white flex items-center gap-1">
+        <span class="w-1.5 h-1.5 rounded-full bg-amber-900 animate-pulse"></span>
+        DRAFT
+      </div>
+    </div>
+    
     <div>
       <div class="flex items-center justify-between mb-4">
         <!-- Render sebagai Gambar jika berupa file -->
