@@ -36,28 +36,21 @@
           </div> -->
 
             <!-- Navigation Menu -->
-            <nav class="px-4 py-2 space-y-1">
-              <a href="#"
-                class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-xl text-sm font-medium transition-colors">
+            <nav class="px-4 py-2 space-y-1 mt-4">
+              <router-link to="/dash/dashboard" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-xl text-sm font-medium transition-colors">
                 Ringkasan Dasbor
-              </a>
-              <a href="#"
-                class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-xl text-sm font-medium transition-colors">
+              </router-link>
+              <router-link to="/dash/students" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-xl text-sm font-medium transition-colors">
                 Daftar Siswa
-              </a>
-              <a href="#"
-                class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-xl text-sm font-medium transition-colors">
+              </router-link>
+              <router-link to="/dash/course-management" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-xl text-sm font-medium transition-colors">
                 Manajemen Course
-              </a>
+              </router-link>
+              
               <!-- Menu Aktif -->
-              <a href="#"
-                class="flex items-center gap-3 px-4 py-3 bg-indigo-50 text-indigo-700 rounded-xl text-sm font-bold transition-colors border border-indigo-100">
+              <router-link to="/dash/staff-management" class="flex items-center gap-3 px-4 py-3 bg-indigo-50 text-indigo-700 rounded-xl text-sm font-bold transition-colors border border-indigo-100">
                 Manajemen Kepegawaian
-              </a>
-              <a href="#"
-                class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-xl text-sm font-medium transition-colors">
-                Settings
-              </a>
+              </router-link>
             </nav>
           </div>
         </aside>
@@ -393,23 +386,21 @@
         </div>
         
         <nav class="flex flex-col gap-2">
-          <a href="#" class="px-4 py-3 text-gray-600 hover:bg-white rounded-xl text-sm font-medium transition-colors">
+          <router-link to="/dash/dashboard" class="px-4 py-3 text-gray-600 hover:bg-white rounded-xl text-sm font-medium transition-colors">
             Ringkasan Dasbor
-          </a>
-          <a href="#" class="px-4 py-3 text-gray-600 hover:bg-white rounded-xl text-sm font-medium transition-colors">
+          </router-link>
+          <router-link to="/dash/students" class="px-4 py-3 text-gray-600 hover:bg-white rounded-xl text-sm font-medium transition-colors">
             Daftar Siswa
-          </a>
-          <a href="#" class="px-4 py-3 text-gray-600 hover:bg-white rounded-xl text-sm font-medium transition-colors">
+          </router-link>
+          <router-link to="/dash/course-management" class="px-4 py-3 text-gray-600 hover:bg-white rounded-xl text-sm font-medium transition-colors">
             Manajemen Course
-          </a>
+          </router-link>
+          
           <!-- Menu Aktif -->
-          <a href="#" class="px-4 py-3 bg-indigo-50 text-indigo-700 rounded-xl text-sm font-bold transition-colors border border-indigo-100 flex items-center justify-between">
+          <router-link to="/dash/staff-management" class="px-4 py-3 bg-indigo-50 text-indigo-700 rounded-xl text-sm font-bold transition-colors border border-indigo-100 flex items-center justify-between">
             Manajemen Kepegawaian
             <span class="w-2 h-2 rounded-full bg-indigo-600"></span>
-          </a>
-          <a href="#" class="px-4 py-3 text-gray-600 hover:bg-white rounded-xl text-sm font-medium transition-colors">
-            Settings
-          </a>
+          </router-link>
         </nav>
       </div>
     </div>

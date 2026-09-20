@@ -17,7 +17,7 @@ let backgroundTimer
 onMounted(async () => {
   const { data } = await supabase.auth.getSession()
   if (data.session) {
-    router.push('/dash/staff-management')
+    router.push('/dash/dashboard')
   }
 
   // Set background pertama kali
@@ -40,7 +40,7 @@ const handleStaffLogin = async () => {
     await loginWithEmail(email.value, password.value)
     
     // Jika berhasil, arahkan ke dashboard
-    router.push('/dash/staff-management')
+    router.push('/dash/dashboard')
   } catch (error) {
     errorMessage.value = 'Akses ditolak. Email atau NIP/Password tidak valid.'
   } finally {

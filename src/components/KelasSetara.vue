@@ -1,11 +1,13 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { currentUser, initAuth, logout, getDisplayName } from '../composables/useAuth.js'
+import { supabase } from '../supabase.js'
 import CourseCard from './CourseCard.vue'
 import AuthModal from './AuthModal.vue'
 import ChangePasswordModal from './ChangePasswordModal.vue'
-// Import data silabus master
+
+// Import data silabus master (Sementara tetap di sini sebagai bridge)
 import { informatikaSyllabusData } from '../data/informatika.js'
 import { backendSyllabusData } from '../data/backend.js'
 import { gamtekSyllabusData } from '../data/gamtek.js'
@@ -16,25 +18,76 @@ const isLoginModalOpen = ref(false)
 const selectedCourse = ref(null) // Menyimpan course apa yang sedang diklik
 const isUserMenuOpen = ref(false)
 const isChangePasswordOpen = ref(false)
-
 const router = useRouter()
+
+// State Data Dinamis
+const courses = ref([])
+const categories = ref(['Semua']) // Akan diisi dinamis dari Supabase
+const selectedCategory = ref('Semua')
+const isLoadingCourses = ref(true)
+
+// Bridge Sementara: Pemetaan ID Kursus Supabase ke File Silabus Lokal
+const syllabusMap = {
+  1: informatikaSyllabusData,
+  2: gamtekSyllabusData,
+  3: rsaSyllabusData,
+  5: backendSyllabusData
+}
+
+// Menarik data kursus dari Supabase
+const fetchCourses = async () => {
+  try {
+    isLoadingCourses.value = true
+    // Karena RLS diset hanya baca is_published=true, siswa tidak akan melihat kursus draft
+    const { data, error } = await supabase
+      .from('courses')
+      .select('*')
+      .order('id', { ascending: true })
+
+    if (error) throw error
+
+    // 1. Ekstrak kategori unik
+    const uniqueCategories = new Set(data.map(course => course.category))
+    categories.value = ['Semua', ...uniqueCategories]
+
+    // 2. Gabungkan data Supabase dengan bridge silabus lokal
+    courses.value = data.map(course => {
+      return {
+        ...course,
+        syllabus: syllabusMap[course.id] || null
+      }
+    })
+
+  } catch (error) {
+    console.error('Gagal memuat daftar kursus:', error.message)
+  } finally {
+    isLoadingCourses.value = false
+  }
+}
 
 onMounted(() => {
   initAuth()
+  fetchCourses()
+})
+
+// Pantau secara reaktif setiap kali ada perubahan identitas (Login/Logout)
+// Vue akan otomatis menarik ulang data kursus dari Supabase tanpa perlu reload halaman!
+watch(currentUser, () => {
+  fetchCourses()
 })
 
 // --- FUNGSI PENCEGAT KLIK DARI KARTU MAPEL ---
 const handleMulaiBelajar = (course) => {
   if (currentUser.value) {
     // CEK OTORISASI: Jika user sudah login, apakah dia boleh masuk kelas ini?
-    const isSpbnCourse = course.tag === 'SPBN Bekasi';
-    const isPublicUser = !currentUser.value.email.endsWith('@siswa.dycodev.com');
+    // const isSpbnCourse = course.tag === 'SPBN Bekasi';
+    // const isPublicUser = !currentUser.value.email.endsWith('@siswa.dycodev.com');
 
     // Jika ini kelas SPBN dan yang login BUKAN murid SPBN (publik)
-    if (isSpbnCourse && isPublicUser) {
-      alert('Akses Ditolak: Materi ini bersifat privat dan khusus untuk siswa SMK Penerbangan Bakti Nusantara.');
-      return; // Hentikan proses, jangan pindah halaman!
-    }
+    // if (isSpbnCourse && isPublicUser) {
+    //   alert('Akses Ditolak: Materi ini bersifat privat dan khusus untuk siswa SMK Penerbangan Bakti Nusantara.');
+    //   return;
+    // }
 
     // Jika lolos pengecekan otorisasi, luncurkan ke materi
     // window.location.href = course.link;
@@ -50,101 +103,110 @@ const handleMulaiBelajar = (course) => {
 const openGeneralLogin = () => {
   // 1. Beritahu modal bahwa ini login umum (bukan dari kartu mapel)
   selectedCourse.value = null; 
-  
   // 2. Perintahkan modal untuk buka dirinya.
   // (Saat ini terjadi, watch di AuthModal akan otomatis membersihkan form)
   isLoginModalOpen.value = true; 
 }
 
 // Data Kategori
-const categories = [
-  'Semua',
-  'Software Engineering',
-  'Materi SMK',
-  'Quality Assurance',
-  'Airport Safety & Operations'
-]
+// const categories = [
+//   'Semua',
+//   'Software Engineering',
+//   'Materi SMK',
+//   'Quality Assurance',
+//   'Airport Safety & Operations'
+// ]
 
-const selectedCategory = ref('Semua')
 
 // Data Mata Pelajaran & Modul
-const courses = ref([
-  {
-    id: 1,
-    title: 'Informatika SMK',
-    category: 'Materi SMK',
-    description: 'Konsep dasar informatika, pemikiran komputasional, serta praktik dasar pemrograman untuk siswa SMK.',
-    syllabus: informatikaSyllabusData,
-    level: 'Pemula',
-    tag: 'SPBN Bekasi',
-    icon: '💻',
-    link: '/ruang-belajar/?subject=informatika',
-    practiceLink: '#'
-  },
-  {
-    id: 2,
-    title: 'Gambar Teknik SMK',
-    category: 'Materi SMK',
-    description: 'Panduan standar penggambaran teknik, proyeksi, dan dokumentasi visual teknis untuk siswa kejuruan.',
-    syllabus: gamtekSyllabusData,
-    level: 'Pemula',
-    tag: 'SPBN Bekasi',
-    icon: '📐',
-    // link: 'https://drive.google.com/drive/folders/1oB0gv3FnmG0n1MOPM6QQHHq9XbcojyEF?usp=sharing',
-    link: '/ruang-belajar/?subject=gamtek',
-    practiceLink: 'https://drive.google.com/drive/folders/1Lk_OQfelBLp4fMFXpS0pIhSU3Q0JabbD?usp=sharing'
-  },
-  {
-    id: 3,
-    title: 'RAMP Safety Awareness',
-    category: 'Airport Safety & Operations',
-    description: 'Panduan komprehensif keselamatan ground handling, identifikasi bahaya airside, dan prosedur kerja aman di sekitar pesawat.',
-    syllabus: rsaSyllabusData,
-    level: 'Semua Tingkat',
-    tag: 'Umum',
-    icon: '/ico-airport.png',
-    link: '/ruang-belajar/?subject=rsa',
-    practiceLink: '#'
-  },
-  {
-    id: 4,
-    title: 'Web Development Basics',
-    category: 'Software Engineering',
-    description: 'Belajar fondasi pembuatan web modern menggunakan HTML, CSS, JavaScript, dan framework interaktif.',
-    lessonsCount: 15,
-    practiceCount: 0,
-    level: 'Pemula - Menengah',
-    tag: 'Umum',
-    icon: '🌐',
-    link: '/ruang-belajar/?subject=webdev',
-    practiceLink: '#'
-  },
-  {
-    id: 5,
-    title: 'Backend Engineering',
-    category: 'Software Engineering',
-    description: 'Arsitektur REST API, manajemen basis data, dan pembuatan layanan backend yang scalable.',
-    syllabus: backendSyllabusData,
-    level: 'Menengah',
-    tag: 'Umum',
-    icon: '⚙️',
-    link: '/ruang-belajar/?subject=backend',
-    practiceLink: '#'
-  },
-  {
-    id: 6,
-    title: 'Software Quality Assurance',
-    category: 'Quality Assurance',
-    description: 'Prinsip pengujian perangkat lunak, manual testing, penyusunan test case, dan otomatisasi pengujian.',
-    lessonsCount: 0,
-    practiceCount: 0,
-    level: 'Semua Tingkat',
-    tag: 'Umum',
-    icon: '🧪',
-    link: '/ruang-belajar/?subject=sqa',
-    practiceLink: '#'
-  }
-])
+// const courses = ref([
+//   {
+//     id: 1,
+//     title: 'Informatika SMK',
+//     category: 'Materi SMK',
+//     description: 'Konsep dasar informatika, pemikiran komputasional, serta praktik dasar pemrograman untuk siswa SMK.',
+//     syllabus: informatikaSyllabusData,
+//     level: 'Pemula',
+//     tag: 'SPBN Bekasi',
+//     icon: '💻',
+//     link: '/ruang-belajar/?subject=informatika',
+//     practiceLink: '#'
+//   },
+//   {
+//     id: 2,
+//     title: 'Gambar Teknik SMK',
+//     category: 'Materi SMK',
+//     description: 'Panduan standar penggambaran teknik, proyeksi, dan dokumentasi visual teknis untuk siswa kejuruan.',
+//     syllabus: gamtekSyllabusData,
+//     level: 'Pemula',
+//     tag: 'SPBN Bekasi',
+//     icon: '📐',
+//     // link: 'https://drive.google.com/drive/folders/1oB0gv3FnmG0n1MOPM6QQHHq9XbcojyEF?usp=sharing',
+//     link: '/ruang-belajar/?subject=gamtek',
+//     practiceLink: 'https://drive.google.com/drive/folders/1Lk_OQfelBLp4fMFXpS0pIhSU3Q0JabbD?usp=sharing'
+//   },
+//   {
+//     id: 3,
+//     title: 'RAMP Safety Awareness',
+//     category: 'Airport Safety & Operations',
+//     description: 'Panduan komprehensif keselamatan ground handling, identifikasi bahaya airside, dan prosedur kerja aman di sekitar pesawat.',
+//     syllabus: rsaSyllabusData,
+//     level: 'Semua Tingkat',
+//     tag: 'Umum',
+//     icon: '/ico-airport.png',
+//     link: '/ruang-belajar/?subject=rsa',
+//     practiceLink: '#'
+//   },
+//   {
+//     id: 4,
+//     title: 'Web Development Basics',
+//     category: 'Software Engineering',
+//     description: 'Belajar fondasi pembuatan web modern menggunakan HTML, CSS, JavaScript, dan framework interaktif.',
+//     lessonsCount: 15,
+//     practiceCount: 0,
+//     level: 'Pemula - Menengah',
+//     tag: 'Umum',
+//     icon: '🌐',
+//     link: '/ruang-belajar/?subject=webdev',
+//     practiceLink: '#'
+//   },
+//   {
+//     id: 5,
+//     title: 'Backend Engineering',
+//     category: 'Software Engineering',
+//     description: 'Arsitektur REST API, manajemen basis data, dan pembuatan layanan backend yang scalable.',
+//     syllabus: backendSyllabusData,
+//     level: 'Menengah',
+//     tag: 'Umum',
+//     icon: '⚙️',
+//     link: '/ruang-belajar/?subject=backend',
+//     practiceLink: '#'
+//   },
+//   {
+//     id: 6,
+//     title: 'Software Quality Assurance',
+//     category: 'Quality Assurance',
+//     description: 'Prinsip pengujian perangkat lunak, manual testing, penyusunan test case, dan otomatisasi pengujian.',
+//     syllabus: null,
+//     level: 'Semua Tingkat',
+//     tag: 'Umum',
+//     icon: '🧪',
+//     link: '/ruang-belajar/?subject=sqa',
+//     practiceLink: '#'
+//   },
+//   {
+//     id: 7,
+//     title: 'Kurusus Baru',
+//     category: 'Kategori Baru',
+//     description: 'Deskripsi BAru',
+//     syllabus: null,
+//     level: 'Semua Tingkat',
+//     tag: 'Umum',
+//     icon: '🧪',
+//     link: '/ruang-belajar/?subject=kursus-baru',
+//     practiceLink: '#'
+//   }
+// ])
 
 // Filter Kartu Berdasarkan Kategori & Hitung Modul Secara Dinamis
 const displayCourses = computed(() => {
