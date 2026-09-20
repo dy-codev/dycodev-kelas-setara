@@ -1,6 +1,6 @@
 <template>
   <div :class="['bg-slate-900 sm:pl-10 sm:pb-2 h-screen w-full flex flex-col box-border', isDetailDrawerOpen ? 'sm:pr-0' : 'sm:pr-2']">
-    <div class=" flex justify-between p-2.5 sm:my-2.5">
+    <div class="flex justify-between p-2.5 sm:my-2.5">
       <div class="flex gap-2">
         <svg class="w-[34px] h-[34px] shrink-0" viewBox="0 0 40 40" fill="none">
           <rect x="16" y="2" width="10" height="10" rx="2" fill="#fff"></rect>
