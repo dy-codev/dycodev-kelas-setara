@@ -396,7 +396,7 @@ const getEmbedUrl = (url) => {
             min-camera-orbit="auto auto 0m"
             class="w-full flex-1 outline-none transition-all duration-500"
           ></model-viewer>
-        </div>
+      </div>
 
       <div v-if="!hasMedia" class="text-center py-16 border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50">
         <span class="text-4xl block mb-3">🎥</span>
