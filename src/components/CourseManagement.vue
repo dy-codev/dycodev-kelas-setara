@@ -216,7 +216,7 @@
                 </div>
 
                 <form @submit.prevent="saveCourse" class="flex-1 overflow-y-auto px-4 space-y-4 pb-6 mt-2.5 custom-scrollbar">
-                    <div class="grid rid-cols-2 gap-4">
+                    <div class="grid grid-cols-2 gap-4">
                         <div class="col-span-2">
                             <label class="block text-sm font-semibold text-gray-700 mb-1.5">Judul Mata Pelajaran</label>
                             <input v-model="form.title" type="text" required
