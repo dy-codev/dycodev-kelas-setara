@@ -416,7 +416,7 @@ const loadQuizHistory = async () => {
 // FUNGSI SAVE KUIS (HIBRIDA)
 const saveQuizScore = async (score) => {
   const lessonId = activeLesson.value
-  const isPassed = score >= 70
+  const isPassed = score >= 75
 
   // 1. Update antarmuka (Vue State) seketika tanpa loading lama
   if (!quizHistory.value[lessonId]) {
