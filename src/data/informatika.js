@@ -394,14 +394,33 @@ export const informatikaSyllabusData = [
   },
   {
     id: 3,
-    title: 'Sprint 3: Jaringan Komputer',
+    title: 'Sprint 3: Jaringan Komputer dan Internet',
     isOpen: false,
     lessons: [
       {
         id: 301,
-        title: 'Pengantar Jaringan Komputer',
+        title: 'Mengenal Jaringan',
         type: 'theory',
         duration: '2 JP',
+        isCompleted: false,
+        externalVideoUrl: null,
+        externalLinks: [
+          { title: null, url: null, type: null },
+          { title: null, url: null, type: null }
+        ],
+        sketchfabUrl: 'https://sketchfab.com/models/4b3b6385661d4837b251f429cd9e0dc3/embed?preload=1',
+        pdfUrl: null,
+        slideUrl: null,
+        videoUrl: null,
+        // markdownUrl: '/materi/informatika/pengantar-jaringan-komputer.md',
+        component: markRaw(defineAsyncComponent(() => import('../materi/informatika/mengenal-jaringan.md'))),
+        content: null
+      },
+      {
+        id: 302,
+        title: 'Quiz: Mengenal Jaringan',
+        type: 'practice',
+        duration: '0.5 JP',
         isCompleted: false,
         externalVideoUrl: null,
         externalLinks: [
@@ -411,10 +430,10 @@ export const informatikaSyllabusData = [
         pdfUrl: null,
         slideUrl: null,
         videoUrl: null,
-        // markdownUrl: '/materi/informatika/pengantar-jaringan-komputer.md',
-        // component: markRaw(defineAsyncComponent(() => import('../materi/informatika/pengantar-jaringan-komputer.md'))),
+        practiceUrl: '/kuis/informatika/kuis-jaringan.html',
+        markdownUrl: '/materi/informatika/quiz.md',
         content: null
-      }
+      },
     ]
   },
   {
