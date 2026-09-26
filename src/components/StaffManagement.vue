@@ -161,7 +161,7 @@
           <main class="flex-1 overflow-y-auto px-4 md:px-8 pb-8">
 
             <div class="flex justify-between items-end mb-6">
-              <div class="bg-red-100">
+              <div class="">
                 <h1 class="text-2xl font-bold text-gray-900">
                   {{ tabInfo[activeTab].title }}
                 </h1>
@@ -169,8 +169,16 @@
                   {{ tabInfo[activeTab].description }}
                 </p>
               </div>
-              <div >
-                <p>content-tools</p>
+              <!-- Content Tools: Tampil khusus di Akun Akses -->
+              <div v-if="activeTab === 'akun-akses'" class="flex items-center bg-gray-200/60 p-1.5 rounded-xl shadow-inner border border-gray-200">
+                <button @click="viewMode = 'table'" :class="{'bg-white text-indigo-700 shadow font-bold': viewMode === 'table', 'text-gray-500 hover:text-gray-700': viewMode !== 'table'}" class="px-4 py-1.5 text-sm rounded-lg transition-all flex items-center gap-2">
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                  Tabel
+                </button>
+                <button @click="viewMode = 'card'" :class="{'bg-white text-indigo-700 shadow font-bold': viewMode === 'card', 'text-gray-500 hover:text-gray-700': viewMode !== 'card'}" class="px-4 py-1.5 text-sm rounded-lg transition-all flex items-center gap-2">
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+                  Kartu
+                </button>
               </div>
             </div>
 
@@ -239,57 +247,134 @@
             </div>
 
             <!-- TAB 3: TABEL AKUN & HAK AKSES -->
-            <div v-if="activeTab === 'akun-akses'"
-              class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-              <table class="w-full text-left border-collapse">
-                <thead>
-                  <tr class="bg-gray-50/50 border-b border-gray-100 text-sm text-gray-500">
-                    <th class="px-6 py-4 font-semibold">Nama Pemilik Akun</th>
-                    <th class="px-6 py-4 font-semibold">Email Login (Auth)</th>
-                    <th class="px-6 py-4 font-semibold">Role Sistem</th>
-                    <th class="hidden md:table-cell px-6 py-4 font-semibold text-right">Aksi</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-100">
-                  <tr v-if="isLoading" class="text-center">
-                    <td colspan="4" class="px-6 py-10 text-gray-400">Memuat data...</td>
-                  </tr>
-                  <tr v-else-if="linkedStaff.length === 0" class="text-center">
-                    <td colspan="4" class="px-6 py-10 text-gray-400">Belum ada akun yang dibuat.</td>
-                  </tr>
-                  <tr v-else v-for="staff in linkedStaff" :key="staff.id" @click="openStaffDetail(staff)"
-                    class="hover:bg-gray-50/80 cursor-pointer">
-                    <td class="px-6 py-4 text-sm font-bold text-gray-900">
-                      {{ staff.full_name }} <br><span class="text-xs font-normal text-gray-500">{{ staff.position
-                        }}</span>
-                    </td>
-                    <td class="px-6 py-4 text-sm text-gray-600">{{ staff.auth_email || '(Disembunyikan)' }}
-                    </td>
-                    <td class="px-6 py-4">
-                      <div class="flex flex-wrap gap-1">
-                        <span v-for="role in staff.roles" :key="role"
-                          class="px-2.5 py-1 bg-indigo-50 text-indigo-700 text-xs rounded-md font-semibold border border-indigo-100/50 font-mono tracking-wider">{{
-                          role }}</span>
+            <div v-if="activeTab === 'akun-akses'">
+
+              <div v-if="isLoading" class="text-center py-10 text-gray-400">Memuat data...</div>
+              <div v-else-if="linkedStaff.length === 0" class="text-center py-10 text-gray-400">Belum ada akun yang dibuat.</div>
+              
+              <template v-else>
+                <!-- MODE: TABLE -->
+                <div v-if="viewMode === 'table'" class="bg-white overflow-hidden rounded-2xl border border-gray-200">
+                  <table class="w-full text-left border-collapse">
+                    <thead>
+                      <tr class="bg-gray-50/50 border-b border-gray-100 text-sm text-gray-500">
+                        <th class="px-6 py-4 font-semibold">Nama Pemilik Akun</th>
+                        <th class="px-6 py-4 font-semibold">Email Login (Auth)</th>
+                        <th class="px-6 py-4 font-semibold">Role Sistem</th>
+                        <th class="hidden md:table-cell px-6 py-4 font-semibold text-right">Aksi</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                      <tr v-if="isLoading" class="text-center">
+                        <td colspan="4" class="px-6 py-10 text-gray-400">Memuat data...</td>
+                      </tr>
+                      <tr v-else-if="linkedStaff.length === 0" class="text-center">
+                        <td colspan="4" class="px-6 py-10 text-gray-400">Belum ada akun yang dibuat.</td>
+                      </tr>
+                      <tr v-else v-for="staff in linkedStaff" :key="staff.id" @click="openStaffDetail(staff)"
+                        class="hover:bg-gray-50/80 cursor-pointer">
+                        <td class="px-6 py-4 text-sm font-bold text-gray-900">
+                          {{ staff.full_name }} <br><span class="text-xs font-normal text-gray-500">{{ staff.position
+                            }}</span>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-600">{{ staff.auth_email || '(Disembunyikan)' }}
+                        </td>
+                        <td class="px-6 py-4">
+                          <div class="flex flex-wrap gap-1">
+                            <span v-for="role in staff.roles" :key="role"
+                              class="px-2.5 py-1 bg-indigo-50 text-indigo-700 text-xs rounded-md font-semibold border border-indigo-100/50 font-mono tracking-wider">{{
+                              role }}</span>
+                          </div>
+                        </td>
+                        <td class="hidden md:table-cell px-6 py-4 text-right">
+                          <button @click.stop="openModal(staff, 'akun-akses')"
+                            class="text-sm bg-white border border-gray-200 text-gray-600 hover:text-indigo-600 px-3 py-1.5 rounded-lg shadow-sm">
+                            <svg xmlns="http://w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none"
+                              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <!-- Simbol Pengguna / Akun -->
+                              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                              <circle cx="8.5" cy="7" r="4" />
+                              <!-- Simbol Pengaturan / Roda Gigi -->
+                              <circle cx="19" cy="11" r="2" />
+                              <path
+                                d="M19 8v1M19 13v1M16 11h1M21 11h1M16.9 8.9l.7.7M20.4 12.4l.7.7M16.9 13.1l.7-.7M20.4 9.6l.7-.7" />
+                            </svg>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- MODE: CARDS (Kartu Akses Fisik) -->
+                <div v-if="viewMode === 'card'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                  <div v-for="staff in linkedStaff" :key="staff.id" 
+                       :class="['relative aspect-[1.58] rounded-2xl shadow-xl overflow-hidden group transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 cursor-pointer border border-white/20', getCardBg(staff.id)]"
+                       @click="editingCardId !== staff.id ? openStaffDetail(staff) : null">
+                    
+                    <!-- Watermark / Security Icon di Kanan Atas -->
+                    <svg class="absolute -top-4 -right-4 w-32 h-32 text-white opacity-[0.07] -rotate-12 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                    </svg>
+
+                    <!-- Hover Actions Overlay -->
+                    <div v-if="editingCardId !== staff.id" class="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3 backdrop-blur-[2px] z-20">
+                      <button @click.stop="startCardEdit(staff)" class="px-5 py-2.5 bg-white text-slate-900 rounded-xl font-bold text-sm shadow-sm hover:scale-105 transition-transform">Ubah Kredensial</button>
+                      <button @click.stop="console.log('Hapus klik')" class="px-5 py-2.5 bg-rose-600 text-white rounded-xl font-bold text-sm shadow-sm hover:scale-105 transition-transform">Hapus Akun</button>
+                    </div>
+
+                    <!-- Card Layout 1/3 and 2/3 -->
+                    <div class="flex h-full relative z-10">
+                      
+                      <!-- Kiri (1/3): Profil Demografi -->
+                      <div class="w-1/3 bg-black/15 flex flex-col items-center justify-center p-4 text-center border-r border-white/10 backdrop-blur-sm">
+                        <!-- Avatar Bulat -->
+                        <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center text-3xl font-black text-white shadow-inner mb-3">
+                          {{ staff.full_name.charAt(0).toUpperCase() }}
+                        </div>
+                        <h3 class="text-white font-bold text-sm leading-tight tracking-wide">{{ staff.full_name }}</h3>
+                        <p class="text-white/60 text-[10px] font-bold mt-1.5 uppercase tracking-widest">{{ staff.position }}</p>
                       </div>
-                    </td>
-                    <td class="hidden md:table-cell px-6 py-4 text-right">
-                      <button @click.stop="openModal(staff, 'akun-akses')"
-                        class="text-sm bg-white border border-gray-200 text-gray-600 hover:text-indigo-600 px-3 py-1.5 rounded-lg shadow-sm">
-                        <svg xmlns="http://w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none"
-                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                          <!-- Simbol Pengguna / Akun -->
-                          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                          <circle cx="8.5" cy="7" r="4" />
-                          <!-- Simbol Pengaturan / Roda Gigi -->
-                          <circle cx="19" cy="11" r="2" />
-                          <path
-                            d="M19 8v1M19 13v1M16 11h1M21 11h1M16.9 8.9l.7.7M20.4 12.4l.7.7M16.9 13.1l.7-.7M20.4 9.6l.7-.7" />
-                        </svg>
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+
+                      <!-- Kanan (2/3): Kredensial & Role -->
+                      <div class="w-2/3 p-5 flex flex-col justify-between">
+                        
+                        <!-- Block Atas: Kredensial (Normal View) -->
+                        <div v-if="editingCardId !== staff.id" class="flex-1">
+                          <p class="text-white/60 text-[10px] font-bold mb-1 uppercase tracking-widest">Auth Email</p>
+                          <p class="text-white font-mono text-sm mb-4 truncate">{{ staff.auth_email }}</p>
+
+                          <p class="text-white/60 text-[10px] font-bold mb-1 uppercase tracking-widest">Access Password</p>
+                          <p class="text-white font-mono text-lg tracking-[0.2em] leading-none mt-1">••••••••</p>
+                        </div>
+
+                        <!-- Block Atas: Kredensial (Inline Edit View) -->
+                        <div v-else class="flex-1 bg-black/20 -mx-3 -mt-3 p-3 rounded-xl backdrop-blur-md border border-white/10" @click.stop>
+                          <p class="text-white text-xs font-bold mb-2">Edit Kredensial Akses</p>
+                          <input v-model="cardEditForm.auth_email" type="email" placeholder="Email Baru" class="w-full bg-white/10 border border-white/20 rounded-lg text-white px-3 py-1.5 mb-2 text-sm outline-none placeholder-white/40 focus:bg-white/20 transition-colors">
+                          <input v-model="cardEditForm.password" type="password" placeholder="Password (Kosongkan jika tdk diubah)" class="w-full bg-white/10 border border-white/20 rounded-lg text-white px-3 py-1.5 mb-3 text-sm outline-none placeholder-white/40 focus:bg-white/20 transition-colors">
+                          <div class="flex gap-2">
+                            <button @click.stop="saveCardEdit(staff)" class="flex-1 bg-white text-slate-900 text-xs font-bold py-2 rounded-lg hover:bg-gray-100 transition-colors">Simpan</button>
+                            <button @click.stop="cancelCardEdit" class="flex-1 bg-transparent border border-white/30 text-white text-xs font-bold py-2 rounded-lg hover:bg-white/10 transition-colors">Batal</button>
+                          </div>
+                        </div>
+
+                        <!-- Block Bawah: System Roles -->
+                        <div class="mt-4 pt-3 border-t border-white/10">
+                          <p class="text-white/60 text-[9px] font-bold mb-2 uppercase tracking-widest">System Clearance</p>
+                          <div class="flex flex-wrap gap-1.5">
+                            <span v-for="role in staff.roles" :key="role" class="px-2 py-1 bg-white/10 border border-white/20 text-white text-[10px] rounded-md font-bold uppercase tracking-wider">
+                              {{ role }}
+                            </span>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </template>
             </div>
 
 
@@ -640,6 +725,79 @@ const selectedStaff = ref(null)
 const isEditing = ref(false)
 const activeTab = ref('ringkasan')
 const modalMode = ref('data-pegawai')
+const viewMode = ref('card') // 'card' atau 'table'
+const editingCardId = ref(null) // Menyimpan ID staff yang sedang di-edit inline
+const cardEditForm = ref({ auth_email: '', password: '' }) // Form inline edit
+
+// Palet warna estetik untuk background Card
+const cardColors = [
+  'bg-gradient-to-br from-indigo-500 to-indigo-800',
+  'bg-gradient-to-br from-emerald-500 to-emerald-800',
+  'bg-gradient-to-br from-rose-500 to-rose-800',
+  'bg-gradient-to-br from-amber-500 to-amber-700',
+  'bg-gradient-to-br from-cyan-600 to-cyan-900',
+  'bg-gradient-to-br from-purple-500 to-purple-800',
+  'bg-gradient-to-br from-slate-600 to-slate-900'
+]
+
+// Menghasilkan indeks warna berdasarkan UUID secara deterministik (tetap sama per user)
+const getCardBg = (id) => {
+  if (!id) return cardColors[0]
+  let hash = 0
+  for (let i = 0; i < id.length; i++) {
+    hash = id.charCodeAt(i) + ((hash << 5) - hash)
+  }
+  return cardColors[Math.abs(hash) % cardColors.length]
+}
+
+// Fungsi Edit Inline Card
+const startCardEdit = (staff) => {
+  editingCardId.value = staff.id
+  cardEditForm.value.auth_email = staff.auth_email
+  cardEditForm.value.password = ''
+}
+
+const cancelCardEdit = () => {
+  editingCardId.value = null
+  cardEditForm.value = { auth_email: '', password: '' }
+}
+
+const saveCardEdit = async (staff) => {
+  try {
+    isSaving.value = true // Menggunakan state loading yang sudah ada
+    const functionUrl = 'https://dcndmkhtdlinmimwxslw.supabase.co/functions/v1/update-staff-account'
+
+    // Siapkan data yang dibutuhkan Edge Function
+    const payload = {
+      account_id: staff.account_id,
+      auth_email: cardEditForm.value.auth_email,
+      password: cardEditForm.value.password // Jika kosong, Edge Function akan mengabaikannya
+    }
+
+    const response = await fetch(functionUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+
+    const result = await response.json()
+
+    if (!response.ok) {
+      throw new Error(result.error || 'Terjadi kesalahan saat memperbarui akun.')
+    }
+
+    alert('Sukses! Kredensial berhasil diperbarui.')
+    cancelCardEdit() // Tutup mode inline-edit
+    await fetchStaff() // Muat ulang data terbaru (RPC akan menarik email baru)
+
+  } catch (error) {
+    console.error('Gagal update kredensial:', error.message)
+    alert('Gagal memperbarui: ' + error.message)
+  } finally {
+    isSaving.value = false
+  }
+}
+
 // Computed untuk memisahkan staf berdasarkan status kepemilikan akun
 const unlinkedStaff = computed(() => staffList.value.filter(s => !s.account_id))
 const linkedStaff = computed(() => staffList.value.filter(s => s.account_id))
