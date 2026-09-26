@@ -53,7 +53,7 @@ router.beforeEach(async (to, from, next) => {
       const { data: staffRecord } = await supabase
         .from('staff')
         .select('id')
-        .eq('id', session.user.id)
+        .eq('account_id', session.user.id)
         .single();
         
       if (!staffRecord) {
