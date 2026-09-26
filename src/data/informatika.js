@@ -447,7 +447,7 @@ export const informatikaSyllabusData = [
                 type: 'theory', 
                 duration: '0 JP', 
                 isCompleted: false,
-                pdfUrl: 'preview', 
+                pdfUrl: 'https://drive.google.com/file/d/1mKjrIWrdn1QFzuUQSc3eL_YPg-2KXAu_/preview', 
                 slideUrl: null, 
                 videoUrl: null, 
                 content: null 
