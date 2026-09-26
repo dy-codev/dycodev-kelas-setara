@@ -237,6 +237,24 @@ export const gamtekSyllabusData = [
         ]
     },
     {
+        id: 11,
+        title: 'STS: Ganjil 2026/2027',
+        isOpen: false,
+        lessons: [
+            { 
+                id: 111, 
+                title: 'Kisi-Kisi Soal', 
+                type: 'theory', 
+                duration: '0 JP', 
+                isCompleted: false,
+                pdfUrl: 'https://drive.google.com/file/d/1kkqWkYDz-cUJzzGS8qEH3qFXF3Zjmnjk/preview', 
+                slideUrl: null, 
+                videoUrl: null, 
+                content: null 
+            },
+        ]
+    },
+    {
         id: 5,
         title: 'Sprint 5: Proyeksi Amerika',
         isOpen: false,

@@ -437,6 +437,24 @@ export const informatikaSyllabusData = [
     ]
   },
   {
+        id: 11,
+        title: 'STS: Ganjil 2026/2027',
+        isOpen: false,
+        lessons: [
+            { 
+                id: 111, 
+                title: 'Kisi-Kisi Soal', 
+                type: 'theory', 
+                duration: '0 JP', 
+                isCompleted: false,
+                pdfUrl: 'preview', 
+                slideUrl: null, 
+                videoUrl: null, 
+                content: null 
+            },
+        ]
+    },
+  {
     id: 4,
     title: 'Sprint 4: Analisis Data',
     isOpen: false,
