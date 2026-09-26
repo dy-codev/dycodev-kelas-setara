@@ -78,11 +78,11 @@
                 </button>
 
                 <button v-if="activeTab !== 'ringkasan'" @click="openModal()"
-                  :title="activeTab === 'akun-akses' ? 'Tambah Akun Pegawai' : 'Tambah Pegawai'"
+                  :title="activeTab === 'akun-akses' ? 'Buat Akun Pegawai' : 'Tambah Pegawai'"
                   class="bg-indigo-600 hover:bg-indigo-700 text-white w-10 h-10 md:w-auto md:h-auto md:px-5 md:py-2.5 rounded-lg text-sm font-bold shadow-sm transition-colors flex items-center justify-center gap-2">
                   <span class="text-lg leading-none">+</span>
                   <span class="hidden md:inline">
-                    {{ activeTab === 'akun-akses' ? 'Tambah Akun Pegawai' : 'Tambah Pegawai' }}
+                    {{ activeTab === 'akun-akses' ? 'Buat Akun Pegawai' : 'Tambah Pegawai' }}
                   </span>
                 </button>
               </div>
@@ -161,13 +161,16 @@
           <main class="flex-1 overflow-y-auto px-4 md:px-8 pb-8">
 
             <div class="flex justify-between items-end mb-6">
-              <div>
+              <div class="bg-red-100">
                 <h1 class="text-2xl font-bold text-gray-900">
                   {{ tabInfo[activeTab].title }}
                 </h1>
                 <p class="text-gray-500 text-sm mt-1">
                   {{ tabInfo[activeTab].description }}
                 </p>
+              </div>
+              <div >
+                <p>content-tools</p>
               </div>
             </div>
 
@@ -201,27 +204,34 @@
             </div>
 
             <!-- TAB 2: TABEL DATA PEGAWAI (Administrasi Murni) -->
-            <div v-if="activeTab === 'data-pegawai'" class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            <div v-if="activeTab === 'data-pegawai'"
+              class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
               <table class="w-full text-left border-collapse">
                 <thead>
                   <tr class="bg-gray-50/50 border-b border-gray-100 text-sm text-gray-500">
                     <th class="hidden md:table-cell px-6 py-4 font-semibold">NIP</th>
                     <th class="px-6 py-4 font-semibold">Nama Lengkap</th>
                     <th class="px-6 py-4 font-semibold">Jabatan</th>
-                    <th class="px-6 py-4 font-semibold">Email Kontak (HR)</th>
+                    <th class="px-6 py-4 font-semibold">Email Kontak</th>
                     <th class="hidden md:table-cell px-6 py-4 font-semibold text-right">Aksi</th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                  <tr v-if="isLoading" class="text-center"><td colspan="5" class="px-6 py-10 text-gray-400">Memuat data...</td></tr>
-                  <tr v-else-if="staffList.length === 0" class="text-center"><td colspan="5" class="px-6 py-10 text-gray-400">Belum ada data.</td></tr>
-                  <tr v-else v-for="staff in staffList" :key="staff.id" @click="openStaffDetail(staff)" class="hover:bg-gray-50/80 cursor-pointer">
+                  <tr v-if="isLoading" class="text-center">
+                    <td colspan="5" class="px-6 py-10 text-gray-400">Memuat data...</td>
+                  </tr>
+                  <tr v-else-if="staffList.length === 0" class="text-center">
+                    <td colspan="5" class="px-6 py-10 text-gray-400">Belum ada data.</td>
+                  </tr>
+                  <tr v-else v-for="staff in staffList" :key="staff.id" @click="openStaffDetail(staff)"
+                    class="hover:bg-gray-50/80 cursor-pointer">
                     <td class="hidden md:table-cell px-6 py-4 text-sm font-mono text-gray-500">{{ staff.nip }}</td>
                     <td class="px-6 py-4 text-sm font-bold text-gray-900">{{ staff.full_name }}</td>
                     <td class="px-6 py-4 text-sm text-gray-600">{{ staff.position }}</td>
                     <td class="px-6 py-4 text-sm text-gray-600">{{ staff.contact_email || '-' }}</td>
                     <td class="hidden md:table-cell px-6 py-4 text-right">
-                      <button @click.stop="openModal(staff, 'data-pegawai')" class="text-sm bg-white border border-gray-200 text-gray-600 hover:text-indigo-600 px-3 py-1.5 rounded-lg shadow-sm">Edit</button>
+                      <button @click.stop="openModal(staff, 'data-pegawai')"
+                        class="text-sm bg-white border border-gray-200 text-gray-600 hover:text-indigo-600 px-3 py-1.5 rounded-lg shadow-sm">Edit</button>
                     </td>
                   </tr>
                 </tbody>
@@ -229,7 +239,8 @@
             </div>
 
             <!-- TAB 3: TABEL AKUN & HAK AKSES -->
-            <div v-if="activeTab === 'akun-akses'" class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            <div v-if="activeTab === 'akun-akses'"
+              class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
               <table class="w-full text-left border-collapse">
                 <thead>
                   <tr class="bg-gray-50/50 border-b border-gray-100 text-sm text-gray-500">
@@ -240,20 +251,41 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                  <tr v-if="isLoading" class="text-center"><td colspan="4" class="px-6 py-10 text-gray-400">Memuat data...</td></tr>
-                  <tr v-else-if="linkedStaff.length === 0" class="text-center"><td colspan="4" class="px-6 py-10 text-gray-400">Belum ada akun yang dibuat.</td></tr>
-                  <tr v-else v-for="staff in linkedStaff" :key="staff.id" @click="openStaffDetail(staff)" class="hover:bg-gray-50/80 cursor-pointer">
+                  <tr v-if="isLoading" class="text-center">
+                    <td colspan="4" class="px-6 py-10 text-gray-400">Memuat data...</td>
+                  </tr>
+                  <tr v-else-if="linkedStaff.length === 0" class="text-center">
+                    <td colspan="4" class="px-6 py-10 text-gray-400">Belum ada akun yang dibuat.</td>
+                  </tr>
+                  <tr v-else v-for="staff in linkedStaff" :key="staff.id" @click="openStaffDetail(staff)"
+                    class="hover:bg-gray-50/80 cursor-pointer">
                     <td class="px-6 py-4 text-sm font-bold text-gray-900">
-                      {{ staff.full_name }} <br><span class="text-xs font-normal text-gray-500">{{ staff.position }}</span>
+                      {{ staff.full_name }} <br><span class="text-xs font-normal text-gray-500">{{ staff.position
+                        }}</span>
                     </td>
-                    <td class="px-6 py-4 text-sm font-mono text-indigo-600">{{ staff.auth_email || '(Disembunyikan)' }}</td>
+                    <td class="px-6 py-4 text-sm text-gray-600">{{ staff.auth_email || '(Disembunyikan)' }}
+                    </td>
                     <td class="px-6 py-4">
                       <div class="flex flex-wrap gap-1">
-                        <span v-for="role in staff.roles" :key="role" class="px-2.5 py-1 bg-indigo-50 text-indigo-700 text-xs rounded-md font-semibold border border-indigo-100/50 uppercase tracking-wider">{{ role }}</span>
+                        <span v-for="role in staff.roles" :key="role"
+                          class="px-2.5 py-1 bg-indigo-50 text-indigo-700 text-xs rounded-md font-semibold border border-indigo-100/50 font-mono tracking-wider">{{
+                          role }}</span>
                       </div>
                     </td>
                     <td class="hidden md:table-cell px-6 py-4 text-right">
-                      <button @click.stop="openModal(staff, 'akun-akses')" class="text-sm bg-white border border-gray-200 text-gray-600 hover:text-indigo-600 px-3 py-1.5 rounded-lg shadow-sm">Atur Akun</button>
+                      <button @click.stop="openModal(staff, 'akun-akses')"
+                        class="text-sm bg-white border border-gray-200 text-gray-600 hover:text-indigo-600 px-3 py-1.5 rounded-lg shadow-sm">
+                        <svg xmlns="http://w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <!-- Simbol Pengguna / Akun -->
+                          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                          <circle cx="8.5" cy="7" r="4" />
+                          <!-- Simbol Pengaturan / Roda Gigi -->
+                          <circle cx="19" cy="11" r="2" />
+                          <path
+                            d="M19 8v1M19 13v1M16 11h1M21 11h1M16.9 8.9l.7.7M20.4 12.4l.7.7M16.9 13.1l.7-.7M20.4 9.6l.7-.7" />
+                        </svg>
+                      </button>
                     </td>
                   </tr>
                 </tbody>
@@ -332,8 +364,11 @@
         <div class="absolute left-0 top-0 flex">
           <div class="flex flex-col">
             <div class="bg-slate-900 p-4 rounded-br-xl">
-              <h2 class="text-xl font-bold text-gray-200 inline">
+              <h2 v-if="modalMode === 'data-pegawai'" class="text-xl font-bold text-gray-200 inline">
                 {{ isEditing ? 'Edit Pegawai' : 'Tambah Pegawai Baru' }}
+              </h2>
+              <h2 v-else class="text-xl font-bold text-gray-200 inline">
+                {{ isEditing ? 'Edit Akun Pegawai' : 'Buat Akun Pegawai' }}
               </h2>
             </div>
             <div class="w-5 h-10 bg-slate-900">
@@ -350,24 +385,32 @@
           <div class="px-7 space-y-4">
             <!-- ====== WUJUD MODAL: PEGAWAI ====== -->
             <template v-if="modalMode === 'data-pegawai'">
-              <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Email Kontak Administrasi</label>
-                <input v-model="formPegawai.contact_email" type="email" required
+              <!-- <div>
+                <fieldset>
+                  <legend>Kontak</legend>
+                  <label class="block text-sm font-semibold text-gray-700 mb-1.5">Kontak Email</label>
+                  <input v-model="formPegawai.contact_email" type="email" required
                   class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all"
-                  placeholder="Misal: info@sekolah.com">
-              </div>
+                  placeholder="user@mail.com">
+                </fieldset>
+              </div> -->
               <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-1.5">NIP</label>
+                <label
+                  class="block text-sm font-semibold text-gray-700 mb-1.5 after:ml-0.5 after:text-red-500 after:content-['*']">NIP</label>
                 <input v-model="formPegawai.nip" type="text" required
                   class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl outline-none">
               </div>
               <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Nama Lengkap</label>
+                <label
+                  class="block text-sm font-semibold text-gray-700 mb-1.5 after:ml-0.5 after:text-red-500 after:content-['*']">Nama
+                  Lengkap</label>
                 <input v-model="formPegawai.full_name" type="text" required
                   class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl outline-none">
               </div>
               <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Jabatan Struktural</label>
+                <label
+                  class="block text-sm font-semibold text-gray-700 mb-1.5 after:ml-0.5 after:text-red-500 after:content-['*']">Jabatan
+                  Struktural</label>
                 <select v-model="formPegawai.position" required
                   class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl outline-none cursor-pointer">
                   <option value="" disabled>Pilih Jabatan...</option>
@@ -395,9 +438,12 @@
 
               <!-- Munculkan info role jika pegawai sudah dipilih -->
               <div v-if="formAkun.roles.length" class="p-3 bg-indigo-50 border border-indigo-100 rounded-lg">
-                <p class="text-xs text-indigo-700 flex gap-1.5">
-                  <span class="font-bold">Info:</span> Berdasarkan jabatannya, akun ini akan otomatis mendapat Role:
-                  <span class="font-bold uppercase">{{ formAkun.roles.join(', ') }}</span>
+                <span class="text-xs text-indigo-700 font-bold">Info:</span>
+                <p class="text-xs text-indigo-700 flex gap-2.5 items-center">
+                  Berdasarkan jabatannya, akun ini akan otomatis mendapat Role:
+                  <span class="border border-indigo-700 rounded-md py-1 px-2 font-bold uppercase">
+                    {{ formAkun.roles.join(', ') }}
+                  </span>
                 </p>
               </div>
 
@@ -705,8 +751,8 @@ const handleStaffSelection = () => {
 const savePegawai = async () => {
   try {
     isSaving.value = true
+    const { id, account_id, created_at, updated_at, auth_email, ...updateData } = formPegawai.value
     if (isEditing.value) {
-      const { id, account_id, created_at, updated_at, ...updateData } = formPegawai.value
       const { error } = await supabase.from('staff').update(updateData).eq('id', id)
       if (error) throw error
     } else {
@@ -737,7 +783,7 @@ const saveAkun = async () => {
         'Content-Type': 'application/json',
       },
       // Data yang dikirim: staff_id, auth_email, roles
-      body: JSON.stringify(formAkun.value) 
+      body: JSON.stringify(formAkun.value)
     })
 
     const result = await response.json()
@@ -747,7 +793,7 @@ const saveAkun = async () => {
     }
 
     alert('Berhasil! Akun login Kelas Setara telah dibuat dan ditautkan ke pegawai.')
-    
+
     showModal.value = false
     await fetchStaff()
 
