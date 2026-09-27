@@ -195,7 +195,7 @@
                   </div>
                 </div>
                 <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-center gap-4">
-                  <div class="w-14 h-14 rounded-full bg-emerald-50 flex items-center justify-center text-2xl">✅</div>
+                  <div class="w-14 h-14 rounded-full bg-emerald-50 flex items-center justify-center text-2xl">🔑</div>
                   <div>
                     <p class="text-sm font-medium text-gray-500">Pegawai Memiliki Akun</p>
                     <h3 class="text-3xl font-black text-gray-900">{{ kpiWithAccount }}</h3>
@@ -510,10 +510,11 @@
               <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-1.5">Pilih Pegawai (Yang belum memiliki
                   akun)</label>
-                <select v-model="formAkun.staff_id" @change="handleStaffSelection" required
-                  class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl outline-none cursor-pointer">
+                <!-- Kunci dropdown (disabled) saat mode Edit dan gunakan staffList agar nama yang diedit tetap muncul -->
+                <select v-model="formAkun.staff_id" @change="handleStaffSelection" required :disabled="isEditing"
+                  class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl outline-none cursor-pointer disabled:bg-gray-200 disabled:opacity-70">
                   <option value="" disabled>-- Pilih Pegawai --</option>
-                  <option v-for="staff in unlinkedStaff" :key="staff.id" :value="staff.id">
+                  <option v-for="staff in (isEditing ? staffList : unlinkedStaff)" :key="staff.id" :value="staff.id">
                     {{ staff.full_name }} ({{ staff.position }})
                   </option>
                 </select>
@@ -542,14 +543,18 @@
               <div>
                 <div class="flex justify-between items-center mb-1.5">
                   <label class="block text-sm font-semibold text-gray-700">Password Kredensial</label>
-                  <button type="button" @click="generateRandomPassword" class="text-xs text-indigo-600 hover:text-indigo-800 font-bold flex items-center gap-1">
+                  <!-- Sembunyikan tombol Generate Acak jika sedang mode Edit -->
+                  <button v-if="!isEditing" type="button" @click="generateRandomPassword" class="text-xs text-indigo-600 hover:text-indigo-800 font-bold flex items-center gap-1">
                     🔄 Generate Acak
                   </button>
                 </div>
-                <input v-model="formAkun.password" type="text" required minlength="6"
+                <!-- Hilangkan validasi required dan rubah placeholder saat mode edit -->
+                <input v-model="formAkun.password" type="text" :required="!isEditing" :minlength="isEditing ? 0 : 6"
                   class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl outline-none font-mono text-sm transition-all"
-                  placeholder="Minimal 6 karakter">
-                <p class="text-[11px] text-gray-400 mt-1">Admin dapat menggunakan hasil generate atau memasukkan password kustom secara manual.</p>
+                  :placeholder="isEditing ? '•••••••• (Kosongkan jika tak diubah)' : 'Minimal 6 karakter'">
+                <p class="text-[11px] text-gray-400 mt-1">
+                  {{ isEditing ? 'Isi hanya jika Anda ingin mereset password akun ini.' : 'Admin dapat menggunakan hasil generate atau memasukkan password kustom.' }}
+                </p>
               </div>
             </template>
           </div>
@@ -570,7 +575,7 @@
                 <button type="submit"
                   class="px-5 py-2.5 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-sm transition-colors"
                   :disabled="isSaving">
-                  {{ isSaving ? 'Memproses...' : (modalMode === 'data-pegawai' ? 'Simpan Data Pegawai' : 'Buat Akun') }}
+                  {{ isSaving ? 'Memproses...' : (modalMode === 'data-pegawai' ? 'Simpan Data Pegawai' : (isEditing ? 'Simpan Kredensial' : 'Buat Akun')) }}
                 </button>
               </div>
             </div>
@@ -976,13 +981,24 @@ const openModal = (staff = null, mode = null) => {
   }
 
   if (modalMode.value === 'akun-akses') {
-    formAkun.value = {
-      staff_id: '',
-      auth_email: '',
-      password: '',
-      roles: []
+    if (staff && staff.account_id) {
+      // MODE EDIT: Isi form dengan data yang sudah ada
+      formAkun.value = {
+        staff_id: staff.id,
+        auth_email: staff.auth_email,
+        password: '', // Kosongkan agar tidak sengaja keriset, admin bisa ketik ulang jika ingin mengganti
+        roles: staff.roles || []
+      }
+    } else {
+      // MODE BUAT BARU: Form kosong & generate password
+      formAkun.value = {
+        staff_id: '',
+        auth_email: '',
+        password: '',
+        roles: []
+      }
+      generateRandomPassword()
     }
-    generateRandomPassword()
   }
 
   showModal.value = true
@@ -1023,31 +1039,45 @@ const saveAkun = async () => {
   try {
     isSaving.value = true
 
-    // Kita tetap menggunakan nama fungsi "create-staff" sesuai konfigurasi lokal Anda
-    const functionUrl = 'https://dcndmkhtdlinmimwxslw.supabase.co/functions/v1/create-staff'
+    // Tentukan URL berdasarkan mode (Edit atau Buat Baru)
+    const functionUrl = isEditing.value 
+      ? 'https://dcndmkhtdlinmimwxslw.supabase.co/functions/v1/update-staff-account' 
+      : 'https://dcndmkhtdlinmimwxslw.supabase.co/functions/v1/create-staff'
+
+    // Siapkan Payload data
+    let payload = {}
+    if (isEditing.value) {
+      const selectedStaff = staffList.value.find(s => s.id === formAkun.value.staff_id)
+      payload = {
+        account_id: selectedStaff.account_id,
+        auth_email: formAkun.value.auth_email,
+        password: formAkun.value.password // Akan diabaikan oleh backend jika kosong
+      }
+    } else {
+      payload = formAkun.value
+    }
 
     const response = await fetch(functionUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      // Data yang dikirim: staff_id, auth_email, roles
-      body: JSON.stringify(formAkun.value)
+      body: JSON.stringify(payload)
     })
 
     const result = await response.json()
 
     if (!response.ok) {
-      throw new Error(result.error || 'Terjadi kesalahan saat membuat akun')
+      throw new Error(result.error || 'Terjadi kesalahan saat memproses akun')
     }
 
-    alert('Berhasil! Akun login Kelas Setara telah dibuat dan ditautkan ke pegawai.')
+    alert(isEditing.value ? 'Kredensial berhasil diperbarui!' : 'Berhasil! Akun login telah dibuat.')
 
     showModal.value = false
     await fetchStaff()
 
   } catch (error) {
-    console.error('Gagal membuat akun:', error.message)
+    console.error('Gagal:', error.message)
     alert('Gagal: ' + error.message)
   } finally {
     isSaving.value = false
