@@ -335,7 +335,7 @@ const fetchCurrentProfile = async () => {
         const { data: staffData, error: staffError } = await supabase
             .from('staff')
             .select('full_name')
-            .eq('id', authData.user.id)
+            .eq('account_id', authData.user.id)
             .single()
 
         if (staffError) throw staffError
