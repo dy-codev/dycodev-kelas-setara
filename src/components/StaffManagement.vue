@@ -319,7 +319,7 @@
                     </svg>
 
                     <!-- Hover Actions Overlay -->
-                    <div v-if="editingCardId !== staff.id" class="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3 backdrop-blur-[2px] z-20">
+                    <div v-if="editingCardId !== staff.id" class="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3 backdrop-blur-[2px] z-20 rounded-2xl">
                       <button @click.stop="startCardEdit(staff)" class="px-5 py-2.5 bg-white text-slate-900 rounded-xl font-bold text-sm shadow-sm hover:scale-105 transition-transform">Ubah Kredensial</button>
                       <button @click.stop="deleteAccount(staff)" class="px-5 py-2.5 bg-rose-600 text-white rounded-xl font-bold text-sm shadow-sm hover:scale-105 transition-transform">Hapus Akun</button>
                     </div>
@@ -328,7 +328,7 @@
                     <div class="flex h-full relative z-10">
                       
                       <!-- Kiri (1/3): Profil Demografi -->
-                      <div class="w-1/3 bg-black/15 flex flex-col items-center justify-center p-4 text-center border-r border-white/10 backdrop-blur-sm">
+                      <div class="w-1/3 bg-black/15 flex flex-col items-center justify-center p-4 text-center border-r border-white/10 backdrop-blur-sm rounded-l-2xl">
                         <!-- Avatar Bulat -->
                         <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center text-3xl font-black text-white shadow-inner mb-3">
                           {{ staff.full_name.charAt(0).toUpperCase() }}
@@ -832,7 +832,7 @@ const deleteStaff = async (staff) => {
     alert('Tindakan Ditolak: Anda tidak dapat menghapus data profil Anda sendiri saat sedang aktif masuk di dalam sistem.')
     return;
   }
-  
+
   let warningMessage = `Anda akan menghapus data administrasi pegawai: ${staff.full_name}.\nApakah Anda yakin?`
   
   if (staff.account_id) {
