@@ -321,7 +321,7 @@
                     <!-- Hover Actions Overlay -->
                     <div v-if="editingCardId !== staff.id" class="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3 backdrop-blur-[2px] z-20">
                       <button @click.stop="startCardEdit(staff)" class="px-5 py-2.5 bg-white text-slate-900 rounded-xl font-bold text-sm shadow-sm hover:scale-105 transition-transform">Ubah Kredensial</button>
-                      <button @click.stop="console.log('Hapus klik')" class="px-5 py-2.5 bg-rose-600 text-white rounded-xl font-bold text-sm shadow-sm hover:scale-105 transition-transform">Hapus Akun</button>
+                      <button @click.stop="deleteAccount(staff)" class="px-5 py-2.5 bg-rose-600 text-white rounded-xl font-bold text-sm shadow-sm hover:scale-105 transition-transform">Hapus Akun</button>
                     </div>
 
                     <!-- Card Layout 1/3 and 2/3 -->
@@ -687,7 +687,7 @@
 
         <!-- Action Buttons di Bawah (Fixed) -->
         <div class="pt-4 mt-auto border-t border-slate-200/60 flex gap-3 px-2 shrink-0">
-          <button
+          <button @click="deleteStaff(selectedStaff)"
             class="flex-1 py-3 bg-white border border-rose-200 text-rose-600 hover:bg-rose-50 rounded-xl text-sm font-bold transition-colors">
             Hapus
           </button>
@@ -728,6 +728,7 @@ const modalMode = ref('data-pegawai')
 const viewMode = ref('card') // 'card' atau 'table'
 const editingCardId = ref(null) // Menyimpan ID staff yang sedang di-edit inline
 const cardEditForm = ref({ auth_email: '', password: '' }) // Form inline edit
+const currentUserId = ref(null)
 
 // Palet warna estetik untuk background Card
 const cardColors = [
@@ -795,6 +796,72 @@ const saveCardEdit = async (staff) => {
     alert('Gagal memperbarui: ' + error.message)
   } finally {
     isSaving.value = false
+  }
+}
+
+// --- FUNGSI BARU: Hapus Akun Secara Terpisah ---
+const deleteAccount = async (staff) => {
+  if (staff.account_id === currentUserId.value) {
+    alert('Tindakan Ditolak: Anda tidak dapat mencabut hak akses dari akun yang sedang Anda gunakan saat ini.')
+    return;
+  }
+
+  if (!confirm(`Yakin ingin menghapus hak akses login untuk ${staff.full_name}?\n\n(Data administrasi pegawai tidak akan terhapus, hanya akses sistem yang dicabut).`)) return;
+
+  try {
+    const functionUrl = 'https://dcndmkhtdlinmimwxslw.supabase.co/functions/v1/delete-staff-account'
+    const response = await fetch(functionUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ account_id: staff.account_id })
+    })
+
+    const result = await response.json()
+    if (!response.ok) throw new Error(result.error || 'Gagal menghapus akun.')
+    
+    alert(`Akses login ${staff.full_name} berhasil dicabut.`)
+    await fetchStaff()
+  } catch (error) {
+    alert('Terjadi kesalahan saat menghapus akun: ' + error.message)
+  }
+}
+
+// --- FUNGSI BARU: Hapus Data Pegawai Keseluruhan ---
+const deleteStaff = async (staff) => {
+  if (staff.account_id === currentUserId.value) {
+    alert('Tindakan Ditolak: Anda tidak dapat menghapus data profil Anda sendiri saat sedang aktif masuk di dalam sistem.')
+    return;
+  }
+  
+  let warningMessage = `Anda akan menghapus data administrasi pegawai: ${staff.full_name}.\nApakah Anda yakin?`
+  
+  if (staff.account_id) {
+    warningMessage = `PERINGATAN! Pegawai ini memiliki akun sistem.\nMenghapus data pegawai juga akan menghapus Kredensial Login-nya secara permanen.\n\nApakah Anda yakin ingin menghapus KEDUANYA?`
+  }
+
+  if (!confirm(warningMessage)) return;
+
+  try {
+    // Jika pegawai punya akun, bersihkan akunnya dulu via Edge Function
+    if (staff.account_id) {
+      const functionUrl = 'https://dcndmkhtdlinmimwxslw.supabase.co/functions/v1/delete-staff-account'
+      const response = await fetch(functionUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ account_id: staff.account_id })
+      })
+      if (!response.ok) throw new Error('Gagal membersihkan kredensial bawaan pegawai.')
+    }
+
+    // Setelah kredensial aman (atau jika memang tidak ada kredensial), hapus dari tabel staff
+    const { error } = await supabase.from('staff').delete().eq('id', staff.id)
+    if (error) throw error
+
+    alert('Data pegawai berhasil dihapus sepenuhnya.')
+    isDetailDrawerOpen.value = false
+    await fetchStaff()
+  } catch (error) {
+    alert('Gagal menghapus data pegawai: ' + error.message)
   }
 }
 
@@ -974,6 +1041,8 @@ const fetchCurrentProfile = async () => {
     const { data: authData, error: authError } = await supabase.auth.getUser()
 
     if (authError || !authData.user) throw new Error('Sesi tidak ditemukan')
+
+    currentUserId.value = authData.user.id
 
     // 2. Cari nama lengkap berdasarkan UID di tabel staff
     const { data: staffData, error: staffError } = await supabase
