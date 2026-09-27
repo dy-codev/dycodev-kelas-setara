@@ -14,10 +14,10 @@ serve(async (req) => {
 
   try {
     // Tangkap data dari frontend (Vue) - Format baru untuk mode "Buat Akun"
-    const { staff_id, auth_email, roles } = await req.json()
+    const { staff_id, auth_email, roles, password } = await req.json()
 
     if (!staff_id || !auth_email) {
-      throw new Error("staff_id dan auth_email wajib diisi")
+      throw new Error("staff_id, auth_email, dan password wajib diisi")
     }
 
     // Inisialisasi Supabase Admin menggunakan Service Role Key
@@ -41,7 +41,7 @@ serve(async (req) => {
     // 2. Buat user baru di sistem Autentikasi Supabase
     const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
       email: auth_email,
-      password: staffRecord.nip, // Jadikan NIP sebagai password default pertama kali
+      password: password, // Menggunakan password eksplisit yang diinput/generate admin
       email_confirm: true,
       user_metadata: {
         full_name: staffRecord.full_name // Simpan nama di metadata agar mudah diakses frontend
