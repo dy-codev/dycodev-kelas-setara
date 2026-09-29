@@ -54,7 +54,8 @@
 
                     <!-- Top Header -->
                     <header class="bg-[#F4F7F9] flex justify-between pl-2 md:pl-8 shrink-0">
-                        <div class="flex-9 flex justify-end">
+                        <!-- Container: Dynamic CTA -->
+                        <div class="flex justify-end md:w-[285px]">
                             <div
                                 class="flex-1 mt-4 flex items-center justify-start md:justify-center px-4 md:px-2 gap-4 md:gap-2">
                                 <!-- TOMBOL HAMBURGER (Hanya muncul di mobile) -->
@@ -77,9 +78,67 @@
                                 <div class="w-10 h-10 bg-[#F4F7F9] rounded-tr-2xl"></div>
                             </div>
                         </div>
+                        <!-- Container: Context Menu -->
+                        <div class="flex py-2 items-center flex-1 gap-2 md:gap-4 bg-slate-900 flex-1 rounded-bl-2xl">
+                            <!-- Context Menu Ringkasan -->
+                            <div title="Ringkasan" @click="activeTab = 'ringkasan'"
+                                :class="['flex items-center gap-3 cursor-pointer ml-4 px-2 md:px-3 py-1.5 rounded-2xl shadow-sm transition-colors', activeTab === 'ringkasan' ? 'bg-slate-800' : 'hover:bg-slate-800']">
+                                <div
+                                    class="w-8 h-8 shrink-0 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700">
+                                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="5" width="18" height="14" rx="2" />
+                                        <circle cx="8" cy="10" r="2" />
+                                        <path d="M6.5 15h3" />
+                                        <path d="M13 9h5" />
+                                        <path d="M13 13h5" />
+                                        <path d="M13 16h3" />
+                                    </svg>
+                                </div>
 
-                        <div class="flex items-center gap-2 md:gap-4 bg-slate-900 flex-1 rounded-bl-2xl">
-                            <!-- Context Menu -->
+                                <span class="hidden md:inline text-sm font-medium text-white mr-2 whitespace-nowrap">
+                                    Ringkasan
+                                </span>
+                            </div>
+                            <!-- Context Menu Mata Pelajaran -->
+                            <div title="Mata Pelajaran" @click="activeTab = 'mata-pelajaran'"
+                                :class="['flex items-center gap-3 cursor-pointer px-2 md:px-3 py-1.5 rounded-2xl shadow-sm transition-colors', activeTab === 'mata-pelajaran' ? 'bg-slate-800' : 'hover:bg-slate-800']">
+                                <div
+                                    class="w-8 h-8 shrink-0 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700">
+                                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z" />
+                                        <path d="M4 4h2.5A2.5 2.5 0 0 1 9 6.5V17" />
+                                    </svg>
+                                </div>
+                                <span class="hidden md:inline text-sm font-medium text-white mr-2 whitespace-nowrap">
+                                    Mata Pelajaran
+                                </span>
+                            </div>
+                            <!-- Context Menu Kategori -->
+                            <div title="Akun & Akses" @click="activeTab = 'kategori'"
+                                :class="['flex items-center gap-3 cursor-pointer px-2 md:px-3 py-1.5 rounded-2xl shadow-sm transition-colors', activeTab === 'kategori' ? 'bg-slate-800' : 'hover:bg-slate-800']">
+                                <div
+                                    class="w-8 h-8 shrink-0 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700">
+                                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path
+                                            d="M3 6a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6Z" />
+                                        <path d="M3 9h18" />
+                                        <path d="M8 13h.01" />
+                                        <path d="M12 13h.01" />
+                                        <path d="M16 13h.01" />
+                                        <path d="M8 16h.01" />
+                                        <path d="M12 16h.01" />
+                                        <path d="M16 16h.01" />
+                                    </svg>
+                                </div>
+
+                                <span class="hidden md:inline text-sm font-medium text-white mr-2 whitespace-nowrap">
+                                    Kategori
+                                </span>
+                            </div>
                         </div>
                     </header>
 
@@ -93,9 +152,12 @@
                     <main class="flex-1 overflow-y-auto px-4 md:px-8 pb-8">
                         <div class="flex justify-between items-end mb-6">
                             <div>
-                                <h1 class="text-2xl font-bold text-gray-900">Manajemen Mata Pelajaran</h1>
-                                <p class="text-gray-500 text-sm mt-1">Kelola kurikulum, kategori, dan visibilitas
-                                    materi.</p>
+                                <h1 class="text-2xl font-bold text-gray-900">
+                                    {{ tabInfo[activeTab].title }}
+                                </h1>
+                                <p class="text-gray-500 text-sm mt-1">
+                                    {{ tabInfo[activeTab].description }}
+                                </p>
                             </div>
                         </div>
 
@@ -215,7 +277,8 @@
                     </div>
                 </div>
 
-                <form @submit.prevent="saveCourse" class="flex-1 overflow-y-auto px-4 space-y-4 pb-6 mt-2.5 custom-scrollbar">
+                <form @submit.prevent="saveCourse"
+                    class="flex-1 overflow-y-auto px-4 space-y-4 pb-6 mt-2.5 custom-scrollbar">
                     <div class="grid grid-cols-2 gap-4">
                         <div class="col-span-2">
                             <label class="block text-sm font-semibold text-gray-700 mb-1.5">
@@ -285,7 +348,7 @@
 
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-1.5">
-                                Ikon 
+                                Ikon
                                 <span class="text-xs font-thin italic">(Emoji / Path file)</span>
                             </label>
                             <input v-model="form.icon" type="text"
@@ -429,7 +492,10 @@
                                 Visibilitas</p>
                             <button @click="togglePublish(selectedCourse)"
                                 :class="['px-3 py-1.5 text-xs font-bold rounded-lg border transition-all mt-1', selectedCourse.is_published ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/30' : 'bg-amber-500/20 text-amber-400 border-amber-500/30 hover:bg-amber-500/30']">
-                                {{ selectedCourse.is_published ? '🟢 Sedang Dipublikasi (Ubah ke Draft)' : '🟡 Draft Tersembunyi (Publikasikan)' }}
+                                {{ selectedCourse.is_published 
+                                    ? '🟢 Sedang Dipublikasi (Ubah ke Draft)' 
+                                    : '🟡 Draft Tersembunyi (Publikasikan)' 
+                                }}
                             </button>
                         </div>
                         <div class="h-px bg-slate-700 w-full"></div>
@@ -490,6 +556,8 @@ const isMobileMenuOpen = ref(false)
 const isDetailDrawerOpen = ref(false)
 const selectedCourse = ref(null)
 const isEditing = ref(false)
+const activeTab = ref('ringkasan')
+const modalMode = ref('mata-pelajaran')
 
 // State Form
 const form = ref({
@@ -532,6 +600,21 @@ const openModal = (course = null) => {
     }
     isDetailDrawerOpen.value = false
     showModal.value = true
+}
+
+const tabInfo = {
+    'ringkasan': {
+        title: 'Manajemen Mata Pelajaran',
+        description: 'Ringkasan kondisi kurikulum, kategori, dan visibilitas materi.'
+    },
+    'mata-pelajaran': {
+        title: 'Daftar Mata Pelajaran',
+        description: 'Kelola daftar mata pelajaran, tipe akses dan status publikasi.'
+    },
+    'kategori': {
+        title: 'Kategori',
+        description: 'Kategorikan mata pelajaran berdasarkan bidang keilmuan atau target rombel.'
+    }
 }
 
 const openCourseDetail = (course) => {
