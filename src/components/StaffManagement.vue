@@ -77,7 +77,16 @@
                   </svg>
                 </button>
 
-                <button v-if="activeTab !== 'ringkasan'" @click="openModal()"
+                <!-- DYNAMIC CTA BUTTON -->
+                <!-- 1. Tombol Kembali (Aktif HANYA saat di halaman Detail Profil) -->
+                <button v-if="mainContentView === 'detail'" @click="mainContentView = 'table'; fetchStaff()"
+                  class="bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 w-10 h-10 md:w-auto md:h-auto md:px-5 md:py-2.5 rounded-lg text-sm font-bold shadow-sm transition-colors flex items-center justify-center gap-2">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+                  <span class="hidden md:inline">Kembali ke Daftar</span>
+                </button>
+
+                <!-- 2. Tombol Tambah (Aktif saat di halaman Tabel, kecuali tab Ringkasan) -->
+                <button v-else-if="activeTab !== 'ringkasan'" @click="openModal()"
                   :title="activeTab === 'akun-akses' ? 'Buat Akun Pegawai' : 'Tambah Pegawai'"
                   class="bg-indigo-600 hover:bg-indigo-700 text-white w-10 h-10 md:w-auto md:h-auto md:px-5 md:py-2.5 rounded-lg text-sm font-bold shadow-sm transition-colors flex items-center justify-center gap-2">
                   <span class="text-lg leading-none">+</span>
@@ -381,10 +390,7 @@
 
             <!-- ====== LAYAR DETAIL: PROFIL LENGKAP ====== -->
             <div v-else-if="mainContentView === 'detail'" class="h-full pt-4">
-               <StaffDetailProfile 
-                  :staff-data="selectedStaff"
-                  @back-to-table="mainContentView = 'table'; fetchStaff()"
-               />
+               <StaffDetailProfile :staff-data="selectedStaff"/>
             </div>
 
           </main>

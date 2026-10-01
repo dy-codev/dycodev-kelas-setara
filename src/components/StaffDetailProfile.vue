@@ -2,13 +2,7 @@
   <div class="flex flex-col h-full overflow-hidden relative">
     <!-- HEADER / TOMBOL KEMBALI -->
     <div class="flex items-center gap-4 mb-6 shrink-0">
-      <button @click="$emit('back-to-table')" class="px-4 py-2 bg-white/60 hover:bg-white border border-gray-200/60 rounded-xl text-sm font-bold text-gray-700 shadow-sm transition-all flex items-center gap-2">
-        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-        Kembali ke Daftar Pegawai
-      </button>
-      <div>
-        <h2 class="text-xl font-bold text-gray-900 leading-tight">Profil Lengkap Staf</h2>
-      </div>
+      <h2 class="text-xl font-bold text-gray-900 leading-tight">Profil Lengkap Staf</h2>
     </div>
 
     <!-- KONTEN SCROLLABLE -->
@@ -94,8 +88,6 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['back-to-table'])
-
 const formData = ref({})
 const tempData = ref({})
 const editing = ref({})
@@ -169,7 +161,7 @@ const schema = [
     fields: [
       { key: 'alamat', label: 'Alamat Domisili Lengkap', type: 'text', colSpan: true },
       { key: 'no_hp', label: 'Nomor Telepon / WhatsApp Aktif', type: 'text' },
-      { key: 'email_pribadi', label: 'Email Pribadi (Bukan Login)', type: 'text' },
+      { key: 'contact_email', label: 'Kontak Email', type: 'text' },
       { key: 'darurat_nama', label: 'Kontak Darurat (Nama Keluarga)', type: 'text' },
       { key: 'darurat_hp', label: 'Kontak Darurat (Nomor Telepon)', type: 'text' },
       { key: 'darurat_hubungan', label: 'Kontak Darurat (Hubungan: Suami/Istri/Ortu)', type: 'text' },
