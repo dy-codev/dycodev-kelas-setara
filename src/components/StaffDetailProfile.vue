@@ -37,39 +37,82 @@
             <h3 class="text-base font-bold text-gray-800 mb-6">{{ section.title }}</h3>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
-               <div v-for="field in section.fields" :key="field.key" :class="field.colSpan ? 'md:col-span-2' : ''">
-                  <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">{{ field.label }}</label>
+               <!-- Kita gunakan template agar bisa merender field biasa ATAU fieldset -->
+               <template v-for="(field, index) in section.fields" :key="field.key || 'fs-'+index">
 
-                  <!-- MODE VIEW (READ-ONLY) -->
-                  <div v-if="!editing[field.key]" class="group flex items-start justify-between bg-[#E9EEF2]/60 px-4 py-2.5 rounded-xl border border-transparent hover:border-gray-200/80 transition-colors min-h-[42px]">
-                     <span class="text-sm text-gray-800 font-medium whitespace-pre-wrap">{{ formData[field.key] || '-' }}</span>
-                     <button @click="startEdit(field.key)" class="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-indigo-600 transition-all p-0.5 shrink-0 ml-2" title="Edit Data">
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
-                     </button>
+                  <!-- ========================================== -->
+                  <!-- 1. JIKA FIELD REGULER (BUKAN FIELDSET)     -->
+                  <!-- ========================================== -->
+                  <div v-if="field.type !== 'fieldset'" :class="field.colSpan ? 'md:col-span-2' : ''">
+                     <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">{{ field.label }}</label>
+
+                     <!-- MODE VIEW (READ-ONLY) -->
+                     <div v-if="!editing[field.key]" class="group flex items-start justify-between bg-[#E9EEF2]/60 px-4 py-2.5 rounded-xl border border-transparent hover:border-gray-200/80 transition-colors min-h-[42px]">
+                        <span class="text-sm text-gray-800 font-medium whitespace-pre-wrap">{{ formData[field.key] || '-' }}</span>
+                        <button @click="startEdit(field.key)" class="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-indigo-600 transition-all p-0.5 shrink-0 ml-2" title="Edit Data">
+                           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                        </button>
+                     </div>
+
+                     <!-- MODE EDIT (INPUT FIELD) -->
+                     <div v-else class="flex gap-2 items-start min-h-[42px]">
+                        
+                        <select v-if="field.type === 'select'" v-model="tempData[field.key]" class="flex-1 bg-white px-4 py-2.5 rounded-xl border border-indigo-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 min-h-[42px]">
+                           <option v-for="opt in field.options" :key="opt" :value="opt">{{ opt }}</option>
+                        </select>
+                        
+                        <input v-else-if="field.type === 'date'" v-model="tempData[field.key]" type="date" class="flex-1 bg-white px-4 py-2.5 rounded-xl border border-indigo-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 min-h-[42px]">
+                        
+                        <input v-else v-model="tempData[field.key]" type="text" class="flex-1 bg-white px-4 py-2.5 rounded-xl border border-indigo-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 min-h-[42px]">
+
+                        <button @click="saveEdit(field.key)" :disabled="isSaving" class="h-[42px] px-3 bg-emerald-100 text-emerald-600 hover:bg-emerald-200 rounded-xl transition-colors flex items-center justify-center shrink-0">
+                           <svg v-if="!isSaving" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+                           <span v-else class="text-xs font-bold">...</span>
+                        </button>
+                        
+                        <button @click="cancelEdit(field.key)" :disabled="isSaving" class="h-[42px] px-3 bg-rose-100 text-rose-600 hover:bg-rose-200 rounded-xl transition-colors flex items-center justify-center shrink-0">
+                           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                        </button>
+                     </div>
                   </div>
 
-                  <!-- MODE EDIT (INPUT FIELD) -->
-                  <div v-else class="flex gap-2 items-start min-h-[42px]">
+                  <!-- ========================================== -->
+                  <!-- 2. JIKA FIELDSET (KOTAK KONTAK DARURAT)    -->
+                  <!-- ========================================== -->
+                  <fieldset v-else :class="['border border-rose-200 rounded-[1.25rem] p-5 relative mt-3', field.colSpan ? 'md:col-span-2' : '']">
+                     <legend class="text-[11px] font-bold text-rose-600 uppercase tracking-wider px-3 py-1 rounded-full bg-rose-100 border border-rose-200 shadow-sm ml-2">
+                        🚨 {{ field.legend }}
+                     </legend>
                      
-                     <select v-if="field.type === 'select'" v-model="tempData[field.key]" class="flex-1 bg-white px-4 py-2.5 rounded-xl border border-indigo-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 min-h-[42px]">
-                        <option v-for="opt in field.options" :key="opt" :value="opt">{{ opt }}</option>
-                     </select>
-                     
-                     <input v-else-if="field.type === 'date'" v-model="tempData[field.key]" type="date" class="flex-1 bg-white px-4 py-2.5 rounded-xl border border-indigo-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 min-h-[42px]">
-                     
-                     <input v-else v-model="tempData[field.key]" type="text" class="flex-1 bg-white px-4 py-2.5 rounded-xl border border-indigo-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 min-h-[42px]">
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5 mt-2">
+                        <div v-for="subField in field.subFields" :key="subField.key" :class="subField.colSpan ? 'md:col-span-2' : ''">
+                           <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">{{ subField.label }}</label>
 
-                     <button @click="saveEdit(field.key)" :disabled="isSaving" class="h-[42px] px-3 bg-emerald-100 text-emerald-600 hover:bg-emerald-200 rounded-xl transition-colors flex items-center justify-center shrink-0">
-                        <svg v-if="!isSaving" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
-                        <span v-else class="text-xs font-bold">...</span>
-                     </button>
-                     
-                     <button @click="cancelEdit(field.key)" :disabled="isSaving" class="h-[42px] px-3 bg-rose-100 text-rose-600 hover:bg-rose-200 rounded-xl transition-colors flex items-center justify-center shrink-0">
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
-                     </button>
-                  </div>
+                           <!-- MODE VIEW FIELDSET -->
+                           <div v-if="!editing[subField.key]" class="group flex items-start justify-between bg-[#E9EEF2]/60 px-4 py-2.5 rounded-xl border border-transparent hover:border-gray-200/80 transition-colors min-h-[42px]">
+                              <span class="text-sm text-gray-800 font-medium whitespace-pre-wrap">{{ formData[subField.key] || '-' }}</span>
+                              <button @click="startEdit(subField.key)" class="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-indigo-600 transition-all p-0.5 shrink-0 ml-2" title="Edit Data">
+                                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                              </button>
+                           </div>
 
-               </div>
+                           <!-- MODE EDIT FIELDSET -->
+                           <div v-else class="flex gap-2 items-start min-h-[42px]">
+                              <input v-model="tempData[subField.key]" type="text" class="flex-1 bg-white px-4 py-2.5 rounded-xl border border-gray-200/80 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 min-h-[42px]">
+
+                              <button @click="saveEdit(subField.key)" :disabled="isSaving" class="h-[42px] px-3 bg-emerald-100 text-emerald-600 hover:bg-emerald-200 rounded-xl transition-colors flex items-center justify-center shrink-0">
+                                 <svg v-if="!isSaving" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+                                 <span v-else class="text-xs font-bold">...</span>
+                              </button>
+                              
+                              <button @click="cancelEdit(subField.key)" :disabled="isSaving" class="h-[42px] px-3 bg-rose-100 text-rose-600 hover:bg-rose-200 rounded-xl transition-colors flex items-center justify-center shrink-0">
+                                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                              </button>
+                           </div>
+                        </div>
+                     </div>
+                  </fieldset>
+               </template>
             </div>
          </div>
       </div>
@@ -162,9 +205,17 @@ const schema = [
       { key: 'alamat', label: 'Alamat Domisili Lengkap', type: 'text', colSpan: true },
       { key: 'no_hp', label: 'Nomor Telepon / WhatsApp Aktif', type: 'text' },
       { key: 'contact_email', label: 'Kontak Email', type: 'text' },
-      { key: 'darurat_nama', label: 'Kontak Darurat (Nama Keluarga)', type: 'text' },
-      { key: 'darurat_hp', label: 'Kontak Darurat (Nomor Telepon)', type: 'text' },
-      { key: 'darurat_hubungan', label: 'Kontak Darurat (Hubungan: Suami/Istri/Ortu)', type: 'text' },
+      {
+        // === TIPE KHUSUS FIELDSET ===
+        type: 'fieldset',
+        legend: 'Kontak Darurat Keluarga',
+        colSpan: true,
+        subFields: [
+          { key: 'darurat_nama', label: 'Nama Lengkap', type: 'text', colSpan: true },
+          { key: 'darurat_hp', label: 'Nomor Telepon / HP', type: 'text' },
+          { key: 'darurat_hubungan', label: 'Hubungan (Suami/Istri/Ortu)', type: 'text' },
+        ]
+      }
     ]
   },
   {
