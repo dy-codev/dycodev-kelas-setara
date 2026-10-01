@@ -9,7 +9,7 @@
     <div class="flex-1 overflow-y-auto custom-scrollbar flex flex-col xl:flex-row gap-6 pb-10">
       
       <!-- KOLOM KIRI: SIDEBAR RINGKASAN -->
-      <aside class="w-full xl:w-72 shrink-0 h-max bg-gray-50/50 rounded-[2rem] border border-gray-200/50 p-6 flex flex-col items-center shadow-sm">
+      <aside class="w-full xl:w-72 shrink-0 h-max xl:sticky xl:top-0 self-start z-10 bg-gray-50/50 rounded-[2rem] border border-gray-200/50 p-6 flex flex-col items-center shadow-sm">
          <div class="w-24 h-24 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-3xl font-black mb-4 shadow-inner">
             {{ formData.full_name?.charAt(0).toUpperCase() || 'S' }}
          </div>
