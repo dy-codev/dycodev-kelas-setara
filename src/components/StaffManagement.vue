@@ -183,11 +183,11 @@
                 <div v-if="activeTab === 'akun-akses'" class="flex items-center bg-gray-200/60 p-1.5 rounded-xl shadow-inner border border-gray-200">
                   <button @click="viewMode = 'table'" :class="{'bg-white text-indigo-700 shadow font-bold': viewMode === 'table', 'text-gray-500 hover:text-gray-700': viewMode !== 'table'}" class="px-4 py-1.5 text-sm rounded-lg transition-all flex items-center gap-2">
                     <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-                    Tabel
+                    <span class="hidden xl:inline">Tabel</span>
                   </button>
                   <button @click="viewMode = 'card'" :class="{'bg-white text-indigo-700 shadow font-bold': viewMode === 'card', 'text-gray-500 hover:text-gray-700': viewMode !== 'card'}" class="px-4 py-1.5 text-sm rounded-lg transition-all flex items-center gap-2">
                     <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
-                    Kartu
+                    <span class="hidden xl:inline">Kartu</span>
                   </button>
                 </div>
               </div>

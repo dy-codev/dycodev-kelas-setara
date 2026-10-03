@@ -9,16 +9,17 @@
     <div class="flex-1 overflow-y-auto custom-scrollbar flex flex-col xl:flex-row gap-6 pb-10">
       
       <!-- KOLOM KIRI: SIDEBAR RINGKASAN -->
-      <aside class="w-full xl:w-72 shrink-0 h-max xl:sticky xl:top-0 self-start z-10 bg-gray-50/50 rounded-[2rem] border border-gray-200/50 p-6 flex flex-col items-center shadow-sm">
-         <div class="w-24 h-24 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-3xl font-black mb-4 shadow-inner">
-            {{ formData.full_name?.charAt(0).toUpperCase() || 'S' }}
-         </div>
-         <h2 class="text-lg font-bold text-gray-900 text-center leading-tight">{{ formData.full_name }}</h2>
-         <p class="text-sm font-semibold text-gray-500 mt-1 text-center">{{ formData.position }}</p>
-         
-         <div class="w-full h-px bg-gray-200/60 my-5"></div>
-         
-         <div class="w-full space-y-3">
+      <aside class="bg-white w-full xl:w-72 shrink-0 h-max sticky top-0 self-start z-10 bg-gray-50/50 rounded-[2rem] border border-gray-200/50 p-6 flex xl:flex-col items-center shadow-sm gap-6 xl:gap-0">
+        <div>
+          <div class="w-24 h-24 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-3xl font-black mb-4 shadow-inner">
+             {{ formData.full_name?.charAt(0).toUpperCase() || 'S' }}
+          </div>
+        </div>
+        
+        <div class="w-full space-y-3">
+          <h2 class="text-lg font-bold text-gray-900 xl:text-center leading-tight">{{ formData.full_name }}</h2>
+          <p class="text-sm font-semibold text-gray-500 mt-1 xl:text-center">{{ formData.position }}</p>
+          <div class="w-full h-px bg-gray-200/60 my-5"></div>
            <div>
              <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">NIP / NUPTK</p>
              <p class="text-sm font-mono text-gray-800">{{ formData.nip || '-' }}</p>
@@ -33,7 +34,7 @@
       <!-- KOLOM KANAN: FORMULIR INLINE EDITING -->
       <div class="flex-1 space-y-6">
          <!-- Looping otomatis berdasarkan Schema yang dibuat di Javascript -->
-         <div v-for="section in schema" :key="section.id" class="bg-gray-50/50 rounded-[2rem] border border-gray-200/50 p-6 lg:p-8 shadow-sm">
+         <div v-for="section in schema" :key="section.id" class="bg-white rounded-[2rem] border border-gray-200/50 p-6 lg:p-8 shadow-sm">
             <h3 class="text-base font-bold text-gray-800 mb-6">{{ section.title }}</h3>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
