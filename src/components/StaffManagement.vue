@@ -81,7 +81,9 @@
                 <!-- 1. Tombol Kembali (Aktif HANYA saat di halaman Detail Profil) -->
                 <button v-if="mainContentView === 'detail'" @click="mainContentView = 'table'; fetchStaff()"
                   class="bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 w-10 h-10 md:w-auto md:h-auto md:px-5 md:py-2.5 rounded-lg text-sm font-bold shadow-sm transition-colors flex items-center justify-center gap-2">
-                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                  </svg>
                   <span class="hidden md:inline">Kembali ke Daftar</span>
                 </button>
 
@@ -180,13 +182,29 @@
                   </p>
                 </div>
                 <!-- Content Tools: Tampil khusus di Akun Akses -->
-                <div v-if="activeTab === 'akun-akses'" class="flex items-center bg-gray-200/60 p-1.5 rounded-xl shadow-inner border border-gray-200">
-                  <button @click="viewMode = 'table'" :class="{'bg-white text-indigo-700 shadow font-bold': viewMode === 'table', 'text-gray-500 hover:text-gray-700': viewMode !== 'table'}" class="px-4 py-1.5 text-sm rounded-lg transition-all flex items-center gap-2">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                <div v-if="activeTab === 'akun-akses'"
+                  class="flex items-center bg-gray-200/60 p-1.5 rounded-xl shadow-inner border border-gray-200">
+                  <button @click="viewMode = 'table'"
+                    :class="{ 'bg-white text-indigo-700 shadow font-bold': viewMode === 'table', 'text-gray-500 hover:text-gray-700': viewMode !== 'table' }"
+                    class="px-4 py-1.5 text-sm rounded-lg transition-all flex items-center gap-2">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round">
+                      <line x1="3" y1="6" x2="21" y2="6" />
+                      <line x1="3" y1="12" x2="21" y2="12" />
+                      <line x1="3" y1="18" x2="21" y2="18" />
+                    </svg>
                     <span class="hidden xl:inline">Tabel</span>
                   </button>
-                  <button @click="viewMode = 'card'" :class="{'bg-white text-indigo-700 shadow font-bold': viewMode === 'card', 'text-gray-500 hover:text-gray-700': viewMode !== 'card'}" class="px-4 py-1.5 text-sm rounded-lg transition-all flex items-center gap-2">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+                  <button @click="viewMode = 'card'"
+                    :class="{ 'bg-white text-indigo-700 shadow font-bold': viewMode === 'card', 'text-gray-500 hover:text-gray-700': viewMode !== 'card' }"
+                    class="px-4 py-1.5 text-sm rounded-lg transition-all flex items-center gap-2">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round">
+                      <rect x="3" y="3" width="7" height="7" rx="1" />
+                      <rect x="14" y="3" width="7" height="7" rx="1" />
+                      <rect x="14" y="14" width="7" height="7" rx="1" />
+                      <rect x="3" y="14" width="7" height="7" rx="1" />
+                    </svg>
                     <span class="hidden xl:inline">Kartu</span>
                   </button>
                 </div>
@@ -220,166 +238,258 @@
                   </div>
                 </div>
               </div>
-  
+
               <!-- TAB 2: TABEL DATA PEGAWAI (Administrasi Murni) -->
               <div v-if="activeTab === 'data-pegawai'"
                 class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-                <table class="w-full text-left border-collapse">
-                  <thead>
-                    <tr class="bg-gray-50/50 border-b border-gray-100 text-sm text-gray-500">
-                      <th class="hidden md:table-cell px-6 py-4 font-semibold">NIP</th>
-                      <th class="px-6 py-4 font-semibold">Nama Lengkap</th>
-                      <th class="px-6 py-4 font-semibold">Jabatan</th>
-                      <th class="px-6 py-4 font-semibold">Email Kontak</th>
-                      <th class="hidden md:table-cell px-6 py-4 font-semibold text-right">Aksi</th>
-                    </tr>
-                  </thead>
-                  <tbody class="divide-y divide-gray-100">
-                    <tr v-if="isLoading" class="text-center">
-                      <td colspan="5" class="px-6 py-10 text-gray-400">Memuat data...</td>
-                    </tr>
-                    <tr v-else-if="staffList.length === 0" class="text-center">
-                      <td colspan="5" class="px-6 py-10 text-gray-400">Belum ada data.</td>
-                    </tr>
-                    <tr v-else v-for="staff in staffList" :key="staff.id" @click="openStaffDetail(staff)"
-                      class="hover:bg-gray-50/80 cursor-pointer">
-                      <td class="hidden md:table-cell px-6 py-4 text-sm font-mono text-gray-500">{{ staff.nip }}</td>
-                      <td class="px-6 py-4 text-sm font-bold text-gray-900">{{ staff.full_name }}</td>
-                      <td class="px-6 py-4 text-sm text-gray-600">{{ staff.position }}</td>
-                      <td class="px-6 py-4 text-sm text-gray-600">{{ staff.contact_email || '-' }}</td>
-                      <td class="hidden md:table-cell px-6 py-4 text-right">
-                        <button @click.stop="openModal(staff, 'data-pegawai')"
-                          class="text-sm bg-white border border-gray-200 text-gray-600 hover:text-indigo-600 px-3 py-1.5 rounded-lg shadow-sm">Edit</button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+                <!-- Tambahan inner wrapper untuk horizontal scroll -->
+                <div class="overflow-x-auto custom-scrollbar">
+                  <table class="w-full text-left border-collapse whitespace-nowrap md:whitespace-normal">
+                    <thead>
+                      <tr class="bg-gray-50/50 border-b border-gray-100 text-sm text-gray-500">
+                        <th class="hidden md:table-cell px-6 py-4 font-semibold">NIP</th>
+                        <th class="px-6 py-4 font-semibold">Nama Lengkap</th>
+                        <th class="px-6 py-4 font-semibold">Jabatan</th>
+                        <th class="px-6 py-4 font-semibold">Email Kontak</th>
+                        <th class="hidden md:table-cell px-6 py-4 font-semibold text-right">Aksi</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                      <tr v-if="isLoading" class="text-center">
+                        <td colspan="5" class="px-6 py-10 text-gray-400">Memuat data...</td>
+                      </tr>
+                      <tr v-else-if="staffList.length === 0" class="text-center">
+                        <td colspan="5" class="px-6 py-10 text-gray-400">Belum ada data.</td>
+                      </tr>
+                      <tr v-else v-for="staff in staffList" :key="staff.id" @click="handleRowClick(staff)"
+                        class="hover:bg-gray-50/80 md:cursor-default cursor-pointer">
+                        <td class="hidden md:table-cell px-6 py-4 text-sm font-mono text-gray-500">{{ staff.nip }}</td>
+                        <td class="px-6 py-4 text-sm font-bold text-gray-900">{{ staff.full_name }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-600">{{ staff.position }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-600">{{ staff.contact_email || '-' }}</td>
+                        <td class="hidden md:table-cell px-6 py-4 text-right">
+                          <!-- Tombol Profil Lengkap -->
+                          <button @click.stop="openFullDetail(staff)"
+                            class="text-sm bg-indigo-50 border border-indigo-200 text-indigo-700 hover:bg-indigo-600 hover:text-white px-1.5 py-1.5 m-1 rounded-lg shadow-sm font-semibold transition-colors"
+                            title="Lihat/Edit Profil Lengkap">
+                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                              stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" />
+                              <circle cx="12" cy="12" r="3" />
+                            </svg>
+                          </button>
+                          <!-- Tombol Edit Cepat (Modal) -->
+                          <button @click.stop="openModal(staff, 'data-pegawai')"
+                            class="text-sm bg-white border border-gray-200 text-gray-600 hover:text-indigo-600 px-1.5 py-1.5 m-1 rounded-lg shadow-sm transition-colors"
+                            title="Edit Data Dasar">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                              xmlns="http://www.w3.org/2000/svg">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
+                              </path>
+                            </svg>
+                          </button>
+                          <!-- Tombol Hapus -->
+                          <button @click.stop="deleteStaff(staff)"
+                            class="text-sm bg-white border border-rose-200 text-rose-600 hover:bg-rose-50 px-1.5 py-1.5 m-1 rounded-lg shadow-sm transition-colors"
+                            title="Hapus Data">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                              xmlns="http://www.w3.org/2000/svg">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                              </path>
+                            </svg>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
-  
+
               <!-- TAB 3: TABEL AKUN & HAK AKSES -->
               <div v-if="activeTab === 'akun-akses'">
-  
+
                 <div v-if="isLoading" class="text-center py-10 text-gray-400">Memuat data...</div>
-                <div v-else-if="linkedStaff.length === 0" class="text-center py-10 text-gray-400">Belum ada akun yang dibuat.</div>
-                
+                <div v-else-if="linkedStaff.length === 0" class="text-center py-10 text-gray-400">Belum ada akun yang
+                  dibuat.</div>
+
                 <template v-else>
                   <!-- MODE: TABLE -->
                   <div v-if="viewMode === 'table'" class="bg-white overflow-hidden rounded-2xl border border-gray-200">
-                    <table class="w-full text-left border-collapse">
-                      <thead>
-                        <tr class="bg-gray-50/50 border-b border-gray-100 text-sm text-gray-500">
-                          <th class="px-6 py-4 font-semibold">Nama Pemilik Akun</th>
-                          <th class="px-6 py-4 font-semibold">Email Login (Auth)</th>
-                          <th class="px-6 py-4 font-semibold">Role Sistem</th>
-                          <th class="hidden md:table-cell px-6 py-4 font-semibold text-right">Aksi</th>
-                        </tr>
-                      </thead>
-                      <tbody class="divide-y divide-gray-100">
-                        <tr v-if="isLoading" class="text-center">
-                          <td colspan="4" class="px-6 py-10 text-gray-400">Memuat data...</td>
-                        </tr>
-                        <tr v-else-if="linkedStaff.length === 0" class="text-center">
-                          <td colspan="4" class="px-6 py-10 text-gray-400">Belum ada akun yang dibuat.</td>
-                        </tr>
-                        <tr v-else v-for="staff in linkedStaff" :key="staff.id" @click="openStaffDetail(staff)"
-                          class="hover:bg-gray-50/80 cursor-pointer">
-                          <td class="px-6 py-4 text-sm font-bold text-gray-900">
-                            {{ staff.full_name }} <br><span class="text-xs font-normal text-gray-500">{{ staff.position
+                    <!-- Tambahan inner wrapper untuk horizontal scroll -->
+                    <div class="overflow-x-auto custom-scrollbar">
+                      <table class="w-full text-left border-collapse whitespace-nowrap md:whitespace-normal">
+                        <thead>
+                          <tr class="bg-gray-50/50 border-b border-gray-100 text-sm text-gray-500">
+                            <th class="px-6 py-4 font-semibold">Nama Pemilik Akun</th>
+                            <th class="px-6 py-4 font-semibold">Email Login (Auth)</th>
+                            <th class="px-6 py-4 font-semibold">Role Sistem</th>
+                            <th class="hidden md:table-cell px-6 py-4 font-semibold text-right">Aksi</th>
+                          </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                          <tr v-if="isLoading" class="text-center">
+                            <td colspan="4" class="px-6 py-10 text-gray-400">Memuat data...</td>
+                          </tr>
+                          <tr v-else-if="linkedStaff.length === 0" class="text-center">
+                            <td colspan="4" class="px-6 py-10 text-gray-400">Belum ada akun yang dibuat.</td>
+                          </tr>
+                          <tr v-else v-for="staff in linkedStaff" :key="staff.id" @click="handleRowClick(staff)"
+                            class="hover:bg-gray-50/80 md:cursor-default cursor-pointer">
+                            <td class="px-6 py-4 text-sm font-bold text-gray-900">
+                              {{ staff.full_name }} <br><span class="text-xs font-normal text-gray-500">{{ staff.position
                               }}</span>
-                          </td>
-                          <td class="px-6 py-4 text-sm text-gray-600">{{ staff.auth_email || '(Disembunyikan)' }}
-                          </td>
-                          <td class="px-6 py-4">
-                            <div class="flex flex-wrap gap-1">
-                              <span v-for="role in staff.roles" :key="role"
-                                class="px-2.5 py-1 bg-indigo-50 text-indigo-700 text-xs rounded-md font-semibold border border-indigo-100/50 font-mono tracking-wider">{{
-                                role }}</span>
-                            </div>
-                          </td>
-                          <td class="hidden md:table-cell px-6 py-4 text-right">
-                            <button @click.stop="openModal(staff, 'akun-akses')"
-                              class="text-sm bg-white border border-gray-200 text-gray-600 hover:text-indigo-600 px-3 py-1.5 rounded-lg shadow-sm">
-                              <svg xmlns="http://w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none"
-                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <!-- Simbol Pengguna / Akun -->
-                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                                <circle cx="8.5" cy="7" r="4" />
-                                <!-- Simbol Pengaturan / Roda Gigi -->
-                                <circle cx="19" cy="11" r="2" />
-                                <path
-                                  d="M19 8v1M19 13v1M16 11h1M21 11h1M16.9 8.9l.7.7M20.4 12.4l.7.7M16.9 13.1l.7-.7M20.4 9.6l.7-.7" />
-                              </svg>
-                            </button>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">{{ staff.auth_email || '(Disembunyikan)' }}
+                            </td>
+                            <td class="px-6 py-4">
+                              <div class="flex flex-wrap gap-1">
+                                <span v-for="role in staff.roles" :key="role"
+                                  class="px-2.5 py-1 bg-indigo-50 text-indigo-700 text-xs rounded-md font-semibold border border-indigo-100/50 font-mono tracking-wider">{{
+                                    role }}</span>
+                              </div>
+                            </td>
+                            <td class="hidden md:table-cell px-6 py-4 text-right">
+                              <div class="flex justify-end gap-2">
+                                <!-- Tombol Hapus/Cabut Akun -->
+                                <button @click.stop="deleteAccount(staff)"
+                                  class="text-sm bg-white border border-rose-200 text-rose-600 hover:bg-rose-50 px-1.5 py-1.5 rounded-lg shadow-sm transition-colors"
+                                  title="Cabut Akses Login">
+                                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M13 7a4 4 0 11-8 0 4 4 0 018 0zM9 14a6 6 0 00-6 6v1h12v-1a6 6 0 00-6-6zM21 12h-6">
+                                    </path>
+                                  </svg>
+                                </button>
+                                <!-- Tombol Edit Kredensial (Modal) -->
+                                <button @click.stop="openModal(staff, 'akun-akses')"
+                                  class="text-sm bg-white border border-gray-200 text-gray-600 hover:text-indigo-600 px-1.5 py-1.5 rounded-lg shadow-sm transition-colors"
+                                  title="Edit Kredensial">
+                                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 20h9" />
+                                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                                  </svg>
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
-  
+
                   <!-- MODE: CARDS (Kartu Akses Fisik) -->
-                  <div v-if="viewMode === 'card'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-                    <div v-for="staff in linkedStaff" :key="staff.id" 
-                         :class="['relative aspect-[1.58] rounded-2xl shadow-xl overflow-hidden group transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 cursor-pointer border border-white/20', getCardBg(staff.id)]"
-                         @click="editingCardId !== staff.id ? openStaffDetail(staff) : null">
-                      
+                  <div v-if="viewMode === 'card'"
+                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                    <div v-for="staff in linkedStaff" :key="staff.id"
+                      :class="['relative aspect-[1.58] rounded-2xl shadow-xl overflow-hidden group transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 cursor-pointer border border-white/20', getCardBg(staff.id)]">
+
                       <!-- Watermark / Security Icon di Kanan Atas -->
-                      <svg class="absolute -top-4 -right-4 w-32 h-32 text-white opacity-[0.07] -rotate-12 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <svg
+                        class="absolute -top-4 -right-4 w-32 h-32 text-white opacity-[0.07] -rotate-12 pointer-events-none"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                         <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                         <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                       </svg>
-  
+
                       <!-- Hover Actions Overlay -->
-                      <div v-if="editingCardId !== staff.id" class="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3 backdrop-blur-[2px] z-20 rounded-2xl">
-                        <button @click.stop="startCardEdit(staff)" class="px-5 py-2.5 bg-white text-slate-900 rounded-xl font-bold text-sm shadow-sm hover:scale-105 transition-transform">Ubah Kredensial</button>
-                        <button @click.stop="deleteAccount(staff)" class="px-5 py-2.5 bg-rose-600 text-white rounded-xl font-bold text-sm shadow-sm hover:scale-105 transition-transform">Hapus Akun</button>
-                      </div>
-  
+                      <!-- <div v-if="editingCardId !== staff.id"
+                        class="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3 backdrop-blur-[2px] z-20 rounded-2xl">
+                        <button @click.stop="startCardEdit(staff)"
+                          class="px-5 py-2.5 bg-white text-slate-900 rounded-xl font-bold text-sm shadow-sm hover:scale-105 transition-transform">Ubah
+                          Kredensial</button>
+                        <button @click.stop="deleteAccount(staff)"
+                          class="px-5 py-2.5 bg-rose-600 text-white rounded-xl font-bold text-sm shadow-sm hover:scale-105 transition-transform">Hapus
+                          Akun</button>
+                      </div> -->
+
                       <!-- Card Layout 1/3 and 2/3 -->
                       <div class="flex h-full relative z-10">
-                        
+
                         <!-- Kiri (1/3): Profil Demografi -->
-                        <div class="w-1/3 bg-black/15 flex flex-col items-center justify-center p-4 text-center border-r border-white/10 backdrop-blur-sm rounded-l-2xl">
+                        <div
+                          class="w-1/3 bg-black/15 flex flex-col items-center justify-center p-4 text-center border-r border-white/10 backdrop-blur-sm rounded-l-2xl">
                           <!-- Avatar Bulat -->
-                          <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center text-3xl font-black text-white shadow-inner mb-3">
+                          <div
+                            class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center text-3xl font-black text-white shadow-inner mb-3">
                             {{ staff.full_name.charAt(0).toUpperCase() }}
                           </div>
-                          <h3 class="text-white font-bold text-sm leading-tight tracking-wide">{{ staff.full_name }}</h3>
-                          <p class="text-white/60 text-[10px] font-bold mt-1.5 uppercase tracking-widest">{{ staff.position }}</p>
+                          <h3 class="text-white font-bold text-sm leading-tight tracking-wide">{{ staff.full_name }}
+                          </h3>
+                          <p class="text-white/60 text-[10px] font-bold mt-1.5 uppercase tracking-widest">{{
+                            staff.position }}</p>
                         </div>
-  
+
                         <!-- Kanan (2/3): Kredensial & Role -->
                         <div class="w-2/3 p-5 flex flex-col justify-between">
-                          
+
                           <!-- Block Atas: Kredensial (Normal View) -->
                           <div v-if="editingCardId !== staff.id" class="flex-1">
                             <p class="text-white/60 text-[10px] font-bold mb-1 uppercase tracking-widest">Auth Email</p>
-                            <p class="text-white font-mono text-sm mb-4 truncate">{{ staff.auth_email }}</p>
-  
-                            <p class="text-white/60 text-[10px] font-bold mb-1 uppercase tracking-widest">Access Password</p>
+                            <p class="text-white font-mono text-sm mb-4 truncate">
+                              {{ staff.auth_email }}
+                            </p>
+
+                            <p class="text-white/60 text-[10px] font-bold mb-1 uppercase tracking-widest">Access
+                              Password</p>
                             <p class="text-white font-mono text-lg tracking-[0.2em] leading-none mt-1">••••••••</p>
                           </div>
-  
+
                           <!-- Block Atas: Kredensial (Inline Edit View) -->
-                          <div v-else class="flex-1 bg-black/20 -mx-3 -mt-3 p-3 rounded-xl backdrop-blur-md border border-white/10" @click.stop>
+                          <div v-else
+                            class="flex-1 bg-black/20 -mx-3 -mt-3 p-3 rounded-xl backdrop-blur-md border border-white/10"
+                            @click.stop>
                             <p class="text-white text-xs font-bold mb-2">Edit Kredensial Akses</p>
-                            <input v-model="cardEditForm.auth_email" type="email" placeholder="Email Baru" class="w-full bg-white/10 border border-white/20 rounded-lg text-white px-3 py-1.5 mb-2 text-sm outline-none placeholder-white/40 focus:bg-white/20 transition-colors">
-                            <input v-model="cardEditForm.password" type="password" placeholder="Password (Kosongkan jika tdk diubah)" class="w-full bg-white/10 border border-white/20 rounded-lg text-white px-3 py-1.5 mb-3 text-sm outline-none placeholder-white/40 focus:bg-white/20 transition-colors">
-                            <div class="flex gap-2">
-                              <button @click.stop="saveCardEdit(staff)" class="flex-1 bg-white text-slate-900 text-xs font-bold py-2 rounded-lg hover:bg-gray-100 transition-colors">Simpan</button>
-                              <button @click.stop="cancelCardEdit" class="flex-1 bg-transparent border border-white/30 text-white text-xs font-bold py-2 rounded-lg hover:bg-white/10 transition-colors">Batal</button>
+                            <input v-model="cardEditForm.auth_email" type="email" placeholder="Email Baru"
+                              class="w-full bg-white/10 border border-white/20 rounded-lg text-white px-3 py-1.5 mb-2 text-sm outline-none placeholder-white/40 focus:bg-white/20 transition-colors">
+                            <input v-model="cardEditForm.password" type="password" placeholder="••••••••"
+                              class="w-full bg-white/10 border border-white/20 rounded-lg text-white px-3 py-1.5 text-sm outline-none placeholder-white/40 focus:bg-white/20 transition-colors">
+                            <span class="text-xs italic text-white/50">Kosongkan password jika tdk diubah.</span>
+                            <div class="flex gap-2 mt-2">
+                              <button @click.stop="saveCardEdit(staff)"
+                                class="flex-1 bg-white text-slate-900 text-xs font-bold py-2 rounded-lg hover:bg-gray-100 transition-colors">Simpan</button>
+                              <button @click.stop="cancelCardEdit"
+                                class="flex-1 bg-transparent border border-white/30 text-white text-xs font-bold py-2 rounded-lg hover:bg-white/10 transition-colors">Batal</button>
                             </div>
                           </div>
-  
+
                           <!-- Block Bawah: System Roles -->
-                          <div class="mt-4 pt-3 border-t border-white/10">
-                            <p class="text-white/60 text-[9px] font-bold mb-2 uppercase tracking-widest">System Clearance</p>
-                            <div class="flex flex-wrap gap-1.5">
-                              <span v-for="role in staff.roles" :key="role" class="px-2 py-1 bg-white/10 border border-white/20 text-white text-[10px] rounded-md font-bold uppercase tracking-wider">
-                                {{ role }}
-                              </span>
+                          <div class="flex justify-between items-center mt-4 pt-3 border-t border-white/10">
+                            <div>
+                              <p class="text-white/60 text-[9px] font-bold mb-2 uppercase tracking-widest">System
+                                Clearance</p>
+                              <div class="flex flex-wrap gap-1.5">
+                                <span v-for="role in staff.roles" :key="role"
+                                  class="px-2 py-1 bg-white/10 border border-white/20 text-white text-[10px] rounded-md font-bold uppercase tracking-wider">
+                                  {{ role }}
+                                </span>
+                              </div>
+                            </div>
+
+                            <div class="flex flex-col gap-2">
+                              <button @click.stop="startCardEdit(staff)"
+                                class="text-xs text-white rounded-md hover:bg-gray-100 hover:text-indigo-500 transition-colors border p-0.5" title="Edit Kredensial">
+                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                  <path d="M12 20h9" />
+                                  <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                                </svg>
+                              </button>
+                              <button @click.stop="deleteAccount(staff)"
+                                class="text-xs rounded-md text-gray-100 hover:bg-gray-100 hover:text-red-500 transition-colors border p-0.5" title="Cabut Akses Login">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                  xmlns="http://www.w3.org/2000/svg">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 7a4 4 0 11-8 0 4 4 0 018 0zM9 14a6 6 0 00-6 6v1h12v-1a6 6 0 00-6-6zM21 12h-6">
+                                  </path>
+                                </svg>
+                              </button>
                             </div>
                           </div>
-  
+
                         </div>
                       </div>
                     </div>
@@ -390,7 +500,7 @@
 
             <!-- ====== LAYAR DETAIL: PROFIL LENGKAP ====== -->
             <div v-else-if="mainContentView === 'detail'" class="h-full pt-4">
-               <StaffDetailProfile :staff-data="selectedStaff"/>
+              <StaffDetailProfile :staff-data="selectedStaff" />
             </div>
 
           </main>
@@ -480,20 +590,10 @@
           </div>
         </div>
 
-        <!-- <form @submit.prevent="submitNewStaff" class="mt-4"> -->
         <form @submit.prevent="modalMode === 'data-pegawai' ? savePegawai() : saveAkun()" class="mt-4">
           <div class="px-7 space-y-4">
             <!-- ====== WUJUD MODAL: PEGAWAI ====== -->
             <template v-if="modalMode === 'data-pegawai'">
-              <!-- <div>
-                <fieldset>
-                  <legend>Kontak</legend>
-                  <label class="block text-sm font-semibold text-gray-700 mb-1.5">Kontak Email</label>
-                  <input v-model="formPegawai.contact_email" type="email" required
-                  class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all"
-                  placeholder="user@mail.com">
-                </fieldset>
-              </div> -->
               <div>
                 <label
                   class="block text-sm font-semibold text-gray-700 mb-1.5 after:ml-0.5 after:text-red-500 after:content-['*']">NIP</label>
@@ -559,7 +659,8 @@
                 <div class="flex justify-between items-center mb-1.5">
                   <label class="block text-sm font-semibold text-gray-700">Password Kredensial</label>
                   <!-- Sembunyikan tombol Generate Acak jika sedang mode Edit -->
-                  <button v-if="!isEditing" type="button" @click="generateRandomPassword" class="text-xs text-indigo-600 hover:text-indigo-800 font-bold flex items-center gap-1">
+                  <button v-if="!isEditing" type="button" @click="generateRandomPassword"
+                    class="text-xs text-indigo-600 hover:text-indigo-800 font-bold flex items-center gap-1">
                     🔄 Generate Acak
                   </button>
                 </div>
@@ -568,7 +669,11 @@
                   class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl outline-none font-mono text-sm transition-all"
                   :placeholder="isEditing ? '•••••••• (Kosongkan jika tak diubah)' : 'Minimal 6 karakter'">
                 <p class="text-[11px] text-gray-400 mt-1">
-                  {{ isEditing ? 'Isi hanya jika Anda ingin mereset password akun ini.' : 'Admin dapat menggunakan hasil generate atau memasukkan password kustom.' }}
+                  {{
+                    isEditing
+                      ? 'Isi hanya jika Anda ingin mereset password akun ini.'
+                      : 'Admin dapat menggunakan hasil generate atau memasukkan password kustom.'
+                  }}
                 </p>
               </div>
             </template>
@@ -590,7 +695,8 @@
                 <button type="submit"
                   class="px-5 py-2.5 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-sm transition-colors"
                   :disabled="isSaving">
-                  {{ isSaving ? 'Memproses...' : (modalMode === 'data-pegawai' ? 'Simpan Data Pegawai' : (isEditing ? 'Simpan Kredensial' : 'Buat Akun')) }}
+                  {{ isSaving ? 'Memproses...' : (modalMode === 'data-pegawai' ? 'Simpan Data Pegawai' : (isEditing ?
+                    'Simpan Kredensial' : 'Buat Akun')) }}
                 </button>
               </div>
             </div>
@@ -719,14 +825,29 @@
 
         <!-- Action Buttons di Bawah (Fixed) -->
         <div class="pt-4 mt-auto border-t border-slate-200/60 flex gap-3 px-2 shrink-0">
-          <button @click="deleteStaff(selectedStaff)"
-            class="flex-1 py-3 bg-white border border-rose-200 text-rose-600 hover:bg-rose-50 rounded-xl text-sm font-bold transition-colors">
-            Hapus
-          </button>
-          <button @click="openFullDetail(selectedStaff)"
-            class="flex-1 py-3 bg-indigo-600 text-white hover:bg-indigo-700 rounded-xl text-sm font-bold shadow-sm transition-colors">
-            Edit Profil Lengkap
-          </button>
+          <!-- 1. Tombol khusus jika dibuka dari tabel Data Pegawai -->
+          <template v-if="activeTab === 'data-pegawai'">
+            <button @click="deleteStaff(selectedStaff)"
+              class="flex-1 py-3 bg-white border border-rose-200 text-rose-600 hover:bg-rose-50 rounded-xl text-sm font-bold transition-colors">
+              Hapus Pegawai
+            </button>
+            <button @click="openFullDetail(selectedStaff)"
+              class="flex-1 py-3 bg-indigo-600 text-white hover:bg-indigo-700 rounded-xl text-sm font-bold shadow-sm transition-colors">
+              Edit Profil
+            </button>
+          </template>
+
+          <!-- 2. Tombol khusus jika dibuka dari tabel Akun & Akses -->
+          <template v-else-if="activeTab === 'akun-akses'">
+            <button @click="deleteAccount(selectedStaff)"
+              class="flex-1 py-3 bg-white border border-rose-200 text-rose-600 hover:bg-rose-50 rounded-xl text-sm font-bold transition-colors">
+              Hapus Akses
+            </button>
+            <button @click="openModal(selectedStaff, 'akun-akses')"
+              class="flex-1 py-3 bg-indigo-600 text-white hover:bg-indigo-700 rounded-xl text-sm font-bold shadow-sm transition-colors">
+              Edit Kredensial
+            </button>
+          </template>
         </div>
 
       </div>
@@ -862,7 +983,7 @@ const deleteAccount = async (staff) => {
 
     const result = await response.json()
     if (!response.ok) throw new Error(result.error || 'Gagal menghapus akun.')
-    
+
     alert(`Akses login ${staff.full_name} berhasil dicabut.`)
     await fetchStaff()
   } catch (error) {
@@ -878,7 +999,7 @@ const deleteStaff = async (staff) => {
   }
 
   let warningMessage = `Anda akan menghapus data administrasi pegawai: ${staff.full_name}.\nApakah Anda yakin?`
-  
+
   if (staff.account_id) {
     warningMessage = `PERINGATAN! Pegawai ini memiliki akun sistem.\nMenghapus data pegawai juga akan menghapus Kredensial Login-nya secara permanen.\n\nApakah Anda yakin ingin menghapus KEDUANYA?`
   }
@@ -971,6 +1092,13 @@ const openStaffDetail = (staff) => {
   isDetailDrawerOpen.value = true
 }
 
+// Fungsi untuk mendeteksi layar dan membuka drawer hanya jika di mobile (< 768px)
+const handleRowClick = (staff) => {
+  if (window.innerWidth < 768) {
+    openStaffDetail(staff)
+  }
+}
+
 const openModal = (staff = null, mode = null) => {
   isDetailDrawerOpen.value = false
   isEditing.value = !!staff
@@ -1034,7 +1162,7 @@ const openFullDetail = async (staff) => {
 
     // 2. Gabungkan (Merge) data lengkap dari tabel staff dengan data auth (seperti email & role) yang dibawa oleh RPC
     selectedStaff.value = { ...staff, ...fullStaffData }
-    
+
     // 3. Buka layar detail
     isDetailDrawerOpen.value = false // Tutup laci kanan otomatis
     mainContentView.value = 'detail' // Ubah area tabel menjadi form profil
@@ -1081,8 +1209,8 @@ const saveAkun = async () => {
     isSaving.value = true
 
     // Tentukan URL berdasarkan mode (Edit atau Buat Baru)
-    const functionUrl = isEditing.value 
-      ? 'https://dcndmkhtdlinmimwxslw.supabase.co/functions/v1/update-staff-account' 
+    const functionUrl = isEditing.value
+      ? 'https://dcndmkhtdlinmimwxslw.supabase.co/functions/v1/update-staff-account'
       : 'https://dcndmkhtdlinmimwxslw.supabase.co/functions/v1/create-staff'
 
     // Siapkan Payload data
