@@ -434,6 +434,26 @@ export const informatikaSyllabusData = [
         markdownUrl: '/materi/informatika/quiz.md',
         content: null
       },
+      {
+        id: 303,
+        title: 'Hands-On: Mengkonfigurasi Jaringan Lokal (Kabel & Nirkabel)',
+        type: 'practice',
+        duration: '2 JP',
+        isCompleted: false,
+        externalVideoUrl: null,
+        externalLinks: [
+          { title: null, url: null, type: null },
+          { title: null, url: null, type: null }
+        ],
+        pdfUrl: null,
+        slideUrl: null,
+        videoUrl: null,
+        practiceUrl: null,
+        model3dUrl: '/lan-card.glb',
+        markdownUrl: null,
+        component: markRaw(defineAsyncComponent(() => import('../materi/informatika/handson-mengkonfigurasi-jaringan-lokal.md'))), 
+        content: null
+      },
     ]
   },
   {
