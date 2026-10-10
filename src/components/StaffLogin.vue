@@ -60,7 +60,7 @@ const updateBackground = () => {
     <div class="bg-slate-900 sm:pl-10 sm:pr-2 sm:pt-10 sm:pb-2 h-screen w-full flex flex-col box-border">
       
         <!-- Wrapper Utama Dashboard: Full screen, Flexbox -->
-        <div class="flex flex-col-reverse md:flex-row h-full bg-[#F4F7F9] font-sans rounded-2xl shadow-2xl overflow-hidden border border-slate-900">
+        <div class="flex flex-col-reverse md:flex-row h-full bg-[#F4F7F9] font-sans rounded-br-2xl rounded-tr-2xl rounded-tl-2xl shadow-2xl overflow-hidden border border-slate-900">
     
             <!-- SIDEBAR (KIRI) -->
             <aside class="w-full md:w-1/2 2xl:w-[clamp(10rem,25vw,24rem)] shrink-0 bg-[#F4F7F9] flex flex-col justify-between">
