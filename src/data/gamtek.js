@@ -234,6 +234,27 @@ export const gamtekSyllabusData = [
                 videoUrl: null, 
                 content: null 
             },
+            { 
+                id: 411, 
+                title: 'Mini Challenge: Isometrik', 
+                type: 'challenge', 
+                duration: '1 JP', 
+                isCompleted: false,
+                pdfUrl: 'https://drive.google.com/file/d/1KlBhEN6QbkXwlueOvVUcQCpBm3BrT-JC/preview', 
+                slideUrl: null, 
+                videoUrl: null,
+                model3dUrl: '/isometri-sumatif.glb', 
+                content: `
+                <p>Gambarkan objek di atas dengan kaidah-kaidah isometri dan standar gambar teknik yang benar pada kertas gambar A3!</p>
+                <p>Setelah membuat gambar, jawablah soal berikut ini:</p>   
+                <ol>
+                    <li>Istilah Isometri diambil dari dari bahasa Yunani yang berarti?</li>
+                    <li>Berapa besar sudut terhadap garis mendatar yang digunakan dalam teknik gambar Isometri?</li>
+                    <li>Sebutkan manfaat gambar Isometri dalam industri!</li>
+                    <li>Sebutkan perbedaan antara gambar Isometrik dengan gambar Perspektif!</li>
+                </ol>
+                `
+            },
         ]
     },
     {
