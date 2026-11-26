@@ -12,16 +12,16 @@
 
 
 
----
+<!-- --- -->
 
-## 🗺️ Peta Belajar
+<!-- ## 🗺️ Peta Belajar
 
 | Modul | Topik | Aktivitas |
 |---|---|---|
 | 1 | Sejarah Komputer dan Tokohnya | Ayo Berlatih (individu) + Ayo Berdiskusi (kelompok) |
 | 2 | Revolusi Industri 4.0 | Ayo Berdiskusi (kelompok) |
 | 3 | Dampak Perkembangan Teknologi | Ayo Berlatih (individu) |
-| 4 | Kuis Cepat & Refleksi | Mandiri |
+| 4 | Kuis Cepat & Refleksi | Mandiri | -->
 
 ---
 
