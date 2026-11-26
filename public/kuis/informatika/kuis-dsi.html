@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modul 4 — Kuis Cepat & Refleksi</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .quiz-container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 550px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.4rem;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .question {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #34495e;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            text-align: left;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+
+        .btn-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn {
+            background-color: #ffffff;
+            border: 2px solid #3498db;
+            color: #2c3e50;
+            padding: 12px 15px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+            display: flex;
+            align-items: center;
+        }
+
+        .btn:hover:not([disabled]) {
+            background-color: #3498db;
+            color: #ffffff;
+        }
+
+        .btn.correct {
+            background-color: #2ecc71 !important;
+            border-color: #2ecc71 !important;
+            color: #ffffff !important;
+        }
+
+        .btn.wrong {
+            background-color: #e74c3c !important;
+            border-color: #e74c3c !important;
+            color: #ffffff !important;
+        }
+
+        .btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.9;
+        }
+
+        .footer-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+
+        .next-btn, .restart-btn {
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .next-btn:hover, .restart-btn:hover {
+            background-color: #1a252f;
+        }
+
+        .hide {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container">
+        <h1>Modul 4 — Kuis Cepat & Refleksi</h1>
+        <p class="subtitle">📝 Kuis Cepat Sejarah & Perkembangan Komputer</p>
+
+        <div id="quiz-box">
+            <div class="question" id="question-text">Loading pertanyaan...</div>
+
+            <div class="btn-grid" id="answer-buttons">
+                <!-- Tombol pilihan jawaban diisi via JS -->
+            </div>
+
+            <div class="footer-info">
+                <span id="progress">Soal 1 dari 9</span>
+                <button id="next-btn" class="next-btn hide" onclick="nextQuestion()">Lanjut</button>
+            </div>
+        </div>
+
+        <div id="result-box" class="hide">
+            <h2>Kuis Selesai!</h2>
+            <p id="score-text" style="font-size: 1.2rem; margin: 20px 0; white-space: pre-line;"></p>
+            <button class="restart-btn" onclick="startQuiz()">Ulangi Kuis</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "1. Siapa tokoh yang dijuluki Bapak Komputer Dunia?",
+                answers: ["A. Alan Turing", "B. Charles Babbage", "C. Jack Kilby", "D. Konrad Zuse"],
+                correct: 1
+            },
+            {
+                question: "2. Komputer generasi pertama dicirikan dengan komponen…",
+                answers: ["A. Transistor", "B. IC", "C. Tabung hampa", "D. VLSI"],
+                correct: 2
+            },
+            {
+                question: "3. Penemu cikal bakal komputer generasi kedua adalah Shockley, Bardeen, dan Brattain. Komponen apa yang mereka kembangkan?",
+                answers: ["A. Transistor", "B. Resistor", "C. Disket", "D. Microprocessor"],
+                correct: 0
+            },
+            {
+                question: "4. IC (Integrated Circuits) yang dikembangkan Jack Kilby adalah gabungan dari…",
+                answers: ["A. Mouse, keyboard, monitor", "B. Transistor, kapasitor, resistor", "C. Tabung hampa, transistor, disket", "D. Sensor, software, jaringan"],
+                correct: 1
+            },
+            {
+                question: "5. Pemadatan ratusan ribu IC dalam satu chip dikenal sebagai…",
+                answers: ["A. DBMS", "B. GUI", "C. VLSI", "D. IoT"],
+                correct: 2
+            },
+            {
+                question: "6. Fingerprint dan face recognition untuk membuka kunci perangkat adalah contoh penerapan…",
+                answers: ["A. Cloud Computing", "B. Artificial Intelligence", "C. Additive Manufacturing", "D. Big Data"],
+                correct: 1
+            },
+            {
+                question: "7. Menyimpan berkas di Google Drive termasuk penerapan…",
+                answers: ["A. Cloud Computing", "B. Augmented Reality", "C. Integrated System", "D. Cyber Security"],
+                correct: 0
+            },
+            {
+                question: "8. Seseorang yang menemukan celah sebuah sistem lalu melaporkannya kepada perancang sistem agar diperbaiki disebut…",
+                answers: ["A. Cracker", "B. Hacker", "C. Spammer", "D. Hacker sekaligus cracker"],
+                correct: 1
+            },
+            {
+                question: "9. Sampah elektronik termasuk kategori…",
+                answers: ["A. Sampah organik", "B. Sampah biasa", "C. B3 (bahan beracun dan berbahaya)", "D. Sampah daur ulang aman"],
+                correct: 2
+            }
+        ];
+
+        let activeQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        const quizBox = document.getElementById('quiz-box');
+        const resultBox = document.getElementById('result-box');
+        const questionTextElement = document.getElementById('question-text');
+        const answerButtonsElement = document.getElementById('answer-buttons');
+        const nextButton = document.getElementById('next-btn');
+        const progressElement = document.getElementById('progress');
+        const scoreTextElement = document.getElementById('score-text');
+
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            activeQuestions = [...questions];
+            quizBox.classList.remove('hide');
+            resultBox.classList.add('hide');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            resetState();
+            let currentQuestion = activeQuestions[currentQuestionIndex];
+            
+            progressElement.innerText = `Soal ${currentQuestionIndex + 1} dari ${activeQuestions.length}`;
+            questionTextElement.innerText = currentQuestion.question;
+
+            currentQuestion.answers.forEach((answer, index) => {
+                const button = document.createElement('button');
+                button.innerText = answer;
+                button.classList.add('btn');
+                button.addEventListener('click', () => selectAnswer(index));
+                answerButtonsElement.appendChild(button);
+            });
+        }
+
+        function resetState() {
+            nextButton.classList.add('hide');
+            while (answerButtonsElement.firstChild) {
+                answerButtonsElement.removeChild(answerButtonsElement.firstChild);
+            }
+        }
+
+        function selectAnswer(selectedIndex) {
+            const currentQuestion = activeQuestions[currentQuestionIndex];
+            const buttons = answerButtonsElement.querySelectorAll('button');
+
+            buttons.forEach((button, index) => {
+                button.disabled = true;
+                if (index === currentQuestion.correct) {
+                    button.classList.add('correct');
+                }
+                if (index === selectedIndex && selectedIndex !== currentQuestion.correct) {
+                    button.classList.add('wrong');
+                }
+            });
+
+            if (selectedIndex === currentQuestion.correct) {
+                score++;
+            }
+
+            nextButton.classList.remove('hide');
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < activeQuestions.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            quizBox.classList.add('hide');
+            resultBox.classList.remove('hide');
+            const totalQ = activeQuestions.length;
+            const finalScore = Math.round((score / totalQ) * 100);
+            scoreTextElement.innerText = `Skor Anda: ${finalScore} / 100
+(${score} benar dari ${totalQ} soal)`;
+
+            window.parent.postMessage({
+                type: 'QUIZ_FINISHED',
+                score: finalScore
+            }, '*');
+        }
+
+        startQuiz();
+    </script>
+</body>
+</html>

@@ -506,7 +506,7 @@ export const informatikaSyllabusData = [
     lessons: [
       {
         id: 501,
-        title: 'Pengantar Dampak Sosial Informatika',
+        title: 'Sejarah Teknologi Informasi',
         type: 'theory',
         duration: '2 JP',
         isCompleted: false,
@@ -517,11 +517,32 @@ export const informatikaSyllabusData = [
         ],
         pdfUrl: null,
         slideUrl: null,
-        videoUrl: null,
+        videoUrl: 'https://www.youtube.com/watch?v=v5skA_fUrQ4',
         // markdownUrl: '/materi/informatika/pengantar-dampak-sosial-informatika.md',
-        // component: markRaw(defineAsyncComponent(() => import('../materi/informatika/pengantar-dampak-sosial-informatika.md'))),
+        component: markRaw(defineAsyncComponent(() => import('../materi/informatika/sejarah-teknologi-informasi.md'))),
         content: null
-      }
+      },
+      {
+        id: 502,
+        title: 'Quiz: Dampak Sosial Informatika',
+        type: 'practice',
+        duration: '1 JP',
+        isCompleted: false,
+        externalVideoUrl: null,
+        externalLinks: [
+          { title: null, url: null, type: null },
+          { title: null, url: null, type: null }
+        ],
+        pdfUrl: null,
+        slideUrl: null,
+        videoUrl: null,
+        practiceUrl: '/kuis/informatika/kuis-dsi.html',
+        markdownUrl: '/materi/informatika/quiz-mengenal-perangkat-keras.md',
+        content: `
+            <h3>Uji Pemahaman Dampak Sosial Informatika</h3>
+            <p>Silakan kerjakan kuis interaktif di bawah ini untuk menguji pemahamanmu mengenai Dampak Sosial Informatika.</p>
+            `
+      },
     ]
   },
   {
